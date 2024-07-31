@@ -14,14 +14,30 @@ const FeedbackDisplay = ({ stateStringList, updateFunction }) => {
 }
 
 const StatisticsDisplay = ({ stateStringList, stateList, statisticsStringList, statisticsList }) => {
-  return (
-    <div>
-      {stateStringList.map((state, index) => <p key={index}>{state}: {stateList[index]}</p>)}
-      {statisticsStringList.map((state, index) => (
-        index < 2 ? (<p key={index}>{state}: {statisticsList[index]}</p>)
-        : (<p key={index}>{state}: {statisticsList[index]}%</p>)
+  const sumOfStates = stateList.reduce((sum, state) => sum + state, 0)
+  if (sumOfStates > 0) {
+    return (
+      <div>
+        <StatisticLines key='tracker' stateStringList={stateStringList} stateList={stateList} />
+        <StatisticLines key='statistics' stateStringList={statisticsStringList} stateList={statisticsList} />
+      </div>
+    )
+  }
+  else {
+    return (
+      <div>No Feedback Given</div>
+    )
+  }
+}
+
+const StatisticLines = ({ stateStringList, stateList }) => {
+  return(
+    <>
+      {stateStringList.map((state, index) => (state !== 'Positive'
+                                              ? (<p key={index}>{state}: {stateList[index]}</p>)
+                                              : (<p key={index}>{state}: {stateList[index]}%</p>)
       ))}
-    </div>
+    </>
   )
 }
 
