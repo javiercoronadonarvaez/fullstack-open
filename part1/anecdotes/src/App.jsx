@@ -1,18 +1,28 @@
 import { useState } from 'react'
 
-const Display = ({ selectedAnecdote, updateAnecdote }) => {
+const Display = ({ selectedIndex, numberVotes, selectedAnecdote, updateAnecdoteText, updateAnecdoteFunction, updateVoteText, updateVoteFunction }) => {
   return (
     <div>
       <p>{selectedAnecdote}</p>
-      <Button updateAnecdote={updateAnecdote} />
+      <p>has {numberVotes} votes</p>
+      <ButtonNextAnecdote displayText={updateAnecdoteText} buttonFunction={updateAnecdoteFunction} />
+      <ButtonVote selectedIndex={selectedIndex} displayText={updateVoteText} buttonFunction={updateVoteFunction} />
     </div>
   )
 }
 
-const Button = ({ updateAnecdote }) => {
+const ButtonNextAnecdote = ({ displayText, buttonFunction }) => {
   return (
-    <button onClick={() => updateAnecdote()}>
-      Next Anecdote
+    <button onClick={() => buttonFunction()}>
+      {displayText}
+    </button>
+  )
+}
+
+const ButtonVote = ({ selectedIndex, displayText, buttonFunction }) => {
+  return (
+    <button onClick={() => buttonFunction(selectedIndex)}>
+      {displayText}
     </button>
   )
 }
@@ -37,10 +47,19 @@ const App = () => {
     setSelected(randomNumber)
     console.log(randomNumber)
   }
+  const voteCountList = []
+  anecdotes.forEach((_, index) => voteCountList[index] = 0)
+  const [votes, setVotes] = useState(voteCountList)
+  const updateVote = (selectedIndex) => {
+    const voteCountList = [...votes]
+    voteCountList[selectedIndex] += 1
+    console.log(voteCountList)
+    setVotes(voteCountList)
+  }
 
   return (
     <div>
-      <Display selectedAnecdote={anecdotes[selected]} updateAnecdote={updateAnecdote} />
+      <Display selectedIndex={selected} numberVotes={votes[selected]} selectedAnecdote={anecdotes[selected]} updateAnecdoteText='Next Anecdote' updateAnecdoteFunction={updateAnecdote} updateVoteText='Vote' updateVoteFunction={updateVote} />
     </div>
   )
 }
