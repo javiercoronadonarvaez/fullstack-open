@@ -3,8 +3,10 @@ import { useState } from 'react'
 const FeedbackDisplay = ({ stateStringList, updateFunction }) => {
   return (
     <>
-      <div style={{ color: 'blue', fontWeight: 'bold', fontSize: '20px' }}>
-        Give Feedback
+      <div>
+        <p style={{ color: 'blue', fontWeight: 'bold', fontSize: '20px' }}>
+          Give Feedback
+        </p>
       </div>
       <div>
         {stateStringList.map((state, index) => <Button key={index} label={state} setStateFunction={updateFunction} />)}
@@ -18,14 +20,20 @@ const StatisticsDisplay = ({ stateStringList, stateList, statisticsStringList, s
   if (sumOfStates > 0) {
     return (
       <div>
-        <StatisticLines key='tracker' stateStringList={stateStringList} stateList={stateList} />
-        <StatisticLines key='statistics' stateStringList={statisticsStringList} stateList={statisticsList} />
+        <table style={{ marginTop: '20px', borderCollapse: 'collapse', border: '1px solid black' }}>
+          <tbody>
+              <StatisticLines key='tracker' stateStringList={stateStringList} stateList={stateList} />
+              <StatisticLines key='statistics' stateStringList={statisticsStringList} stateList={statisticsList} />
+          </tbody>
+        </table>
       </div>
     )
   }
   else {
     return (
-      <div>No Feedback Given</div>
+      <div>
+        <p style={{ color: 'red', fontWeight: 'bold', fontSize: '20px' }}>No Feedback Given</p>
+      </div>
     )
   }
 }
@@ -34,8 +42,8 @@ const StatisticLines = ({ stateStringList, stateList }) => {
   return(
     <>
       {stateStringList.map((state, index) => (state !== 'Positive'
-                                              ? (<p key={index}>{state}: {stateList[index]}</p>)
-                                              : (<p key={index}>{state}: {stateList[index]}%</p>)
+                                              ? (<tr key={index}><td style={{ border: '1px solid black' }}>{state}: {stateList[index]}</td></tr>)
+                                              : (<tr key={index}><td style={{ border: '1px solid black' }}>{state}: {stateList[index]}%</td></tr>)
       ))}
     </>
   )
