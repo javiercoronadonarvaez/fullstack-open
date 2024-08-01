@@ -1,13 +1,25 @@
 import { useState } from 'react'
 
-const Display = ({ selectedIndex, numberVotes, selectedAnecdote, updateAnecdoteText, updateAnecdoteFunction, updateVoteText, updateVoteFunction }) => {
+const Display = ({ selectedIndex, numberVotes, selectedAnecdote, updateAnecdoteText, updateAnecdoteFunction, updateVoteText, updateVoteFunction, mostVotedAnecdote, mostVotedNumberVotes }) => {
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{selectedAnecdote}</p>
       <p>has {numberVotes} votes</p>
       <ButtonNextAnecdote displayText={updateAnecdoteText} buttonFunction={updateAnecdoteFunction} />
       <ButtonVote selectedIndex={selectedIndex} displayText={updateVoteText} buttonFunction={updateVoteFunction} />
+      <MostVotedAnecdote mostVotedAnecdote={mostVotedAnecdote} mostVotedNumberVotes={mostVotedNumberVotes} />
     </div>
+  )
+}
+
+const MostVotedAnecdote = ({ mostVotedAnecdote, mostVotedNumberVotes }) => {
+  return (
+    <>
+      <h1>Anecdote with most votes</h1>
+      <p>{mostVotedAnecdote}</p>
+      <p>has {mostVotedNumberVotes} votes</p>
+    </>
   )
 }
 
@@ -45,21 +57,27 @@ const App = () => {
   const updateAnecdote = () => {
     const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min
     setSelected(randomNumber)
-    console.log(randomNumber)
   }
+
   const voteCountList = []
   anecdotes.forEach((_, index) => voteCountList[index] = 0)
   const [votes, setVotes] = useState(voteCountList)
   const updateVote = (selectedIndex) => {
     const voteCountList = [...votes]
     voteCountList[selectedIndex] += 1
-    console.log(voteCountList)
     setVotes(voteCountList)
+  }
+
+  const getMostVotedIndex = () => {
+    const mostVotedIndex = votes.reduce((maxValueIndex, currentValue, currentIndex, array) => {
+      return currentValue > array[maxValueIndex] ? currentIndex : maxValueIndex
+    }, 0)
+    return mostVotedIndex
   }
 
   return (
     <div>
-      <Display selectedIndex={selected} numberVotes={votes[selected]} selectedAnecdote={anecdotes[selected]} updateAnecdoteText='Next Anecdote' updateAnecdoteFunction={updateAnecdote} updateVoteText='Vote' updateVoteFunction={updateVote} />
+      <Display selectedIndex={selected} numberVotes={votes[selected]} selectedAnecdote={anecdotes[selected]} updateAnecdoteText='Next Anecdote' updateAnecdoteFunction={updateAnecdote} updateVoteText='Vote' updateVoteFunction={updateVote} mostVotedAnecdote={anecdotes[getMostVotedIndex()]} mostVotedNumberVotes={votes[getMostVotedIndex()]} />
     </div>
   )
 }
