@@ -14,11 +14,15 @@ const App = () => {
 
   const addNameToPersons = (event) => {
     event.preventDefault()
+    const repeatedNameBool = persons.some(person => person.name === newName)
+    if (repeatedNameBool) {
+      alert(`${newName} is already added to phonebook`)
+    }
+    console.log(repeatedNameBool)
     const newNameObject = {
       name: newName,
       id: persons.length + 1
     }
-    console.log(newNameObject)
     setPersons(persons.concat(newNameObject))
     setNewName('')
   }
