@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import phoneService from './services/phone'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import Person from './components/App'
+import Person from './components/Person'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,12 +12,11 @@ const App = () => {
   const [filteredPersons, setFilteredPersons] = useState(persons)
 
   const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log(response)
-        setPersons(response.data)
-        setFilteredPersons(response.data)
+    phoneService
+      .getAll()
+      .then(personProfile => {
+        setPersons(personProfile)
+        setFilteredPersons(personProfile)
       })
   }
 
@@ -38,7 +37,6 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    setPersons(persons.concat(newNameObject))
     console.log('New Filter', newFilter)
     const filterAppliesToNewEntry = newNameObject.name.toLowerCase().includes(newFilter.toLocaleLowerCase())
     console.log('Filter Applies to New Entry:', filterAppliesToNewEntry)
@@ -46,6 +44,10 @@ const App = () => {
       const newFilteredPersons = filteredPersons.concat(newNameObject)
       setFilteredPersons(newFilteredPersons)
     }
+    phoneService
+      .createNewEntry(newNameObject)
+      .then(newNameData => setPersons(persons.concat(newNameData))
+    )
     setNewName('')
     setNewNumber('')
   }
