@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import noteService from './services/notes'
 import Note from './components/Note'
 
 const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('') 
   const [showAll, setShowAll] = useState(true)
+  const [modifiedNoteContent, setModifiedNoteContent] = useState('')
 
   const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/notes')
-      .then(response => {
-        console.log('promise fulfilled')
-        setNotes(response.data)
-      })
-  }
+      console.log('effect')
+      noteService
+        .getAll()
+        .then(initialNotes => {
+          setNotes(initialNotes)
+        })
+    }
   
   useEffect(hook, [])
 
@@ -28,9 +28,13 @@ const App = () => {
       important: Math.random() < 0.5,
       id: String(notes.length + 1),
     }
-  
-    setNotes(notes.concat(noteObject))
-    setNewNote('')
+    
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+        setNewNote('')
+    })
   }
 
   const handleNoteChange = (event) => {
@@ -40,6 +44,35 @@ const App = () => {
 
   const changeShowAllStatus = () => {
     setShowAll(!showAll)
+  }
+
+  const toggleImportanceOf = id => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+  
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+      setNotes(notes.map(n => n.id !== id ? n : returnedNote))
+    })
+  }
+
+  const updateNoteContent = (event, id) => {
+    event.preventDefault()
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, content: modifiedNoteContent }
+    console.log("Changed NOTE", changedNote)
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+      setNotes(notes.map(n => n.id !== id ? n : returnedNote))
+    })
+    setModifiedNoteContent('')
+  }
+
+  const handleUpdatedContent = (event) => {
+    console.log(event.target.value)
+    setModifiedNoteContent(event.target.value)
   }
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
@@ -53,7 +86,14 @@ const App = () => {
         </button>
       </div>
       <ul>
-        {notesToShow.map(note => <Note key={note.id} note={note} />)}
+        {notesToShow.map(note => <Note 
+                                    key={note.id} 
+                                    note={note} 
+                                    toggleImportance={toggleImportanceOf} 
+                                    value={modifiedNoteContent}
+                                    handleUpdatedContent={handleUpdatedContent}
+                                    updateNoteContent={(event) => updateNoteContent(event, note.id)}
+                                 />)}
       </ul>
       <form key='1' onSubmit={addNote}>
         <input 
