@@ -6,15 +6,15 @@ const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('') 
   const [showAll, setShowAll] = useState(true)
-  const [modifiedNoteContent, setModifiedNoteContent] = useState('')
+  const [modifiedNoteContent, setModifiedNoteContent] = useState([])
 
   const hook = () => {
-      console.log('effect')
-      noteService
-        .getAll()
-        .then(initialNotes => {
-          setNotes(initialNotes)
-        })
+    noteService
+      .getAll()
+      .then(initialNotes => {
+        setNotes(initialNotes)
+        setModifiedNoteContent(Array.from({ length: initialNotes.length }, () => ''))
+      })
     }
   
   useEffect(hook, [])
@@ -60,19 +60,22 @@ const App = () => {
   const updateNoteContent = (event, id) => {
     event.preventDefault()
     const note = notes.find(n => n.id === id)
-    const changedNote = { ...note, content: modifiedNoteContent }
+    const changedNote = { ...note, content: modifiedNoteContent[id - 1] }
     console.log("Changed NOTE", changedNote)
     noteService
       .update(id, changedNote)
       .then(returnedNote => {
-      setNotes(notes.map(n => n.id !== id ? n : returnedNote))
+      (setNotes(notes.map(n => n.id !== id ? n : returnedNote)),
+      (setModifiedNoteContent(notes.map(note => modifiedNoteContent[note.id - 1]=''))))
     })
-    setModifiedNoteContent('')
   }
 
-  const handleUpdatedContent = (event) => {
+  const handleUpdatedContent = (event, id) => {
     console.log(event.target.value)
-    setModifiedNoteContent(event.target.value)
+    console.log(id)
+    const newUpdatedContent = notes.map(note => note.id !== id ? '' : event.target.value)
+    console.log(newUpdatedContent)
+    setModifiedNoteContent(newUpdatedContent)
   }
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
@@ -89,9 +92,9 @@ const App = () => {
         {notesToShow.map(note => <Note 
                                     key={note.id} 
                                     note={note} 
-                                    toggleImportance={toggleImportanceOf} 
-                                    value={modifiedNoteContent}
-                                    handleUpdatedContent={handleUpdatedContent}
+                                    toggleImportance={() => toggleImportanceOf(note.id)} 
+                                    value={modifiedNoteContent[note.id - 1]}
+                                    handleUpdatedContent={(event) => handleUpdatedContent(event, note.id)}
                                     updateNoteContent={(event) => updateNoteContent(event, note.id)}
                                  />)}
       </ul>
