@@ -33,7 +33,7 @@ const App = () => {
       alert(`${newNumber} is already added to phonebook and can't belong to different people`)
     }
     const newNameObject = {
-      id: persons.length + 1,
+      id: String(persons.length + 1),
       name: newName,
       number: newNumber
     }
@@ -67,6 +67,15 @@ const App = () => {
     setFilteredPersons(newFilteredPersons)
   }
 
+  const deleteEntry = (personId, personName) => {
+    console.log(personName)
+    if (window.confirm(`Delete ${personName}?`)) {
+      phoneService
+        .deleteEntry(personId)
+        .then(personProfile => (setPersons(persons.filter(person => person.id !== personProfile.id)), setFilteredPersons(filteredPersons.filter(person => person.id !== personProfile.id))))
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -74,7 +83,7 @@ const App = () => {
       <h2>Add a new entry</h2>
       <PersonForm addEntryToPersons={addEntryToPersons} newName={newName} handleAddedNameChange={handleAddedNameChange} newNumber={newNumber} handleAddedNumberChange={handleAddedNumberChange} />
       <h2>Numbers</h2>
-      {filteredPersons.map(person => <Person key={person.id} person={person} />)}
+      {filteredPersons.map(person => <Person key={person.id} person={person} deleteEntry={deleteEntry} />)}
     </div>
   )
 }

@@ -11,4 +11,10 @@ const createNewEntry = (newNameObject) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, createNewEntry }
+const deleteEntry = (id) => {
+  const specificUrl = `${baseUrl}/${id}`
+  const request = axios.delete(specificUrl)
+  return request.then(response => response.data)
+}
+
+export default { getAll, createNewEntry, deleteEntry }
