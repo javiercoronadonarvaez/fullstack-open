@@ -3,7 +3,7 @@ const Note = ({ note, toggleImportance, value, handleUpdatedContent, updateNoteC
     ? 'make not important' : 'make important'
 
   return (
-    <li>
+    <li className="note">
       {note.content} 
       <button style={{ marginLeft: '10px' }} onClick={toggleImportance}>{label}</button>
       <form key={note.id} onSubmit={updateNoteContent} >

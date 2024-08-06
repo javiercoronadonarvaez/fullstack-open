@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import noteService from './services/notes'
 import Note from './components/Note'
+import Notification from './components/Notification'
+import Footer from './components/Footer'
 
 const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('') 
   const [showAll, setShowAll] = useState(true)
   const [modifiedNoteContent, setModifiedNoteContent] = useState([])
+  const [errorMessage, setErrorMessage] = useState('some error happened...')
 
   const hook = () => {
     noteService
@@ -55,6 +58,15 @@ const App = () => {
       .then(returnedNote => {
       setNotes(notes.map(n => n.id !== id ? n : returnedNote))
     })
+      .catch(error => {
+        setErrorMessage(
+          `Error: ${error}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setNotes(notes.filter(n => n.id !== id))
+    })
   }
 
   const updateNoteContent = (event, id) => {
@@ -83,8 +95,9 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
-        <button onClick={changeShowAllStatus}>
+        <button style={{ marginTop: '10px' }} onClick={changeShowAllStatus}>
           Show {showAll ? 'All' : 'Important'} notes
         </button>
       </div>
@@ -98,6 +111,7 @@ const App = () => {
                                     updateNoteContent={(event) => updateNoteContent(event, note.id)}
                                  />)}
       </ul>
+      <h1>Add New Note</h1>
       <form key='1' onSubmit={addNote}>
         <input 
           value={newNote}
@@ -105,6 +119,7 @@ const App = () => {
         />
         <button type="submit">save</button>
       </form>   
+      <Footer />
     </div>
   )
 }
