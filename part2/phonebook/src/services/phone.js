@@ -11,10 +11,16 @@ const createNewEntry = (newNameObject) => {
   return request.then(response => response.data)
 }
 
+const updateNumber = (id, updatedProfile) => {
+  const specificUrl = `${baseUrl}/${id}`
+  const request = axios.put(specificUrl, updatedProfile)
+  return request.then(response => response.data)
+}
+
 const deleteEntry = (id) => {
   const specificUrl = `${baseUrl}/${id}`
   const request = axios.delete(specificUrl)
   return request.then(response => response.data)
 }
 
-export default { getAll, createNewEntry, deleteEntry }
+export default { getAll, createNewEntry, deleteEntry, updateNumber }
