@@ -1,10 +1,20 @@
-const Country = ({ country }) => {
-  if (country.display === null || country.display === false) {
-    return (
-      <div>
-        <p>{country.name}</p>
-      </div>
-    )
+const Country = ({ country, changeDisplayStatus }) => {
+  if (!country.display) {
+    if (country.name === 'Too many matches, specify another filter') {
+      return (
+        <div>
+          <p>{country.name}</p>
+        </div>
+      )
+    }
+    else {
+      return (
+        <div>
+          <p>{country.name}</p>
+          <button onClick={changeDisplayStatus}>Show Details</button>
+        </div>
+      )
+    }
   }
   else {
     const languageValues = Object.values(country.languages)
