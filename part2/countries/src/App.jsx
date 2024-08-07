@@ -6,8 +6,9 @@ import countriesService from './services/countries'
 const App = () => {
   const [searchValue, setSearchValue] = useState('')
   const [countries, setCountries] = useState([])
+  const [countryToDisplay, setCountryToDisplay] = useState([])
 
-  const hook = () => {
+  const searchAllHook = () => {
     if (searchValue !== '') {
       countriesService
         .getAll()
@@ -19,23 +20,28 @@ const App = () => {
     }
   }
 
-  useEffect(hook, [searchValue])
+  useEffect(searchAllHook, [searchValue])
 
   const determineDisplayLogic = (countriesList) => {
     if (countriesList.length > 10) {
-      const displayedList = ['Too many matches, specify another filter']
-      return displayedList
+      const countriesDisplayStatus = [{ name: 'Too many matches, specify another filter', display: null }]
+      setCountries(countriesDisplayStatus)
+    }
+    else if (countriesList.length > 1 && countriesList.length < 11) {
+      const countriesDisplayStatus = countriesList.map(country => ({ name: country, display: false }))
+      setCountries(countriesDisplayStatus)
     }
     else {
-      return countriesList
+      countriesService
+        .getSingleCountry(countriesList[0])
+        .then(country => setCountries([{ name: country.name.common, display: true, capital: country.capital, area: country.area, languages: country.languages, flag: country.flags.png }]))
     }
   }
 
   const filterResultsFromSearchValue = (allCountries) => {
     const filteredCountries = allCountries.filter(country => country.name.common.toLowerCase().includes(searchValue.toLowerCase()))
     const filteredCountriesNames = filteredCountries.map(country => country.name.common)
-    const displayedList = determineDisplayLogic(filteredCountriesNames)
-    setCountries(displayedList)
+    determineDisplayLogic(filteredCountriesNames)
   }
 
   const handleSearchChange = (event) => {
@@ -46,7 +52,7 @@ const App = () => {
   return (
     <>
       <Filter searchValue={searchValue} handleSearchValue={handleSearchChange} />
-      {countries.map((country, index) => <Country key={index} country={country} />)}
+      {countries.map(country => <Country country={country} />)}
     </>
   )
 }
