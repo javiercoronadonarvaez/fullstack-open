@@ -3,6 +3,8 @@ import phoneService from './services/phone'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
+import Notification from './components/Notification'
+import Error from './components/Error'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -10,6 +12,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [filteredPersons, setFilteredPersons] = useState(persons)
+  const [notification, setNotification] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const hook = () => {
     phoneService
@@ -21,6 +25,20 @@ const App = () => {
   }
 
   useEffect(hook, [])
+
+  const updateNotification = (addedPersonName) => {
+    setNotification(addedPersonName)
+    setTimeout(() => {
+      setNotification(null)
+    }, 2000)
+  }
+
+  const updateError = (deletedPersonName) => {
+    setErrorMessage(deletedPersonName)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
 
   const addEntryToPersons = (event) => {
     event.preventDefault()
@@ -34,7 +52,8 @@ const App = () => {
           phoneService  
             .updateNumber(updatedPersonProfile.id, updatedPersonProfile)
             .then(updatedProfile => (setPersons(persons.map(person => person.id !== updatedProfile.id ? person : updatedProfile)), 
-                                     setFilteredPersons(filteredPersons.map(person => person.id !== updatedProfile.id ? person : updatedProfile))))
+                                     setFilteredPersons(filteredPersons.map(person => person.id !== updatedProfile.id ? person : updatedProfile)),
+                                     updateNotification(updatedProfile.name)))                
           setNewName('')
           setNewNumber('')
           return ;
@@ -65,10 +84,11 @@ const App = () => {
       const newFilteredPersons = filteredPersons.concat(newNameObject)
       setFilteredPersons(newFilteredPersons)
     }
-      phoneService
-        .createNewEntry(newNameObject)
-        .then(newNameData => setPersons(persons.concat(newNameData))
-    )
+    phoneService
+      .createNewEntry(newNameObject)
+      .then(newNameData => (setPersons(persons.concat(newNameData)),
+                            updateNotification(newNameData.name)))
+    setNotification(newNameObject.name)
     setNewName('')
     setNewNumber('')
   }
@@ -89,17 +109,21 @@ const App = () => {
   }
 
   const deleteEntry = (personId, personName) => {
-    console.log(personName)
     if (window.confirm(`Delete ${personName}?`)) {
       phoneService
         .deleteEntry(personId)
         .then(personProfile => (setPersons(persons.filter(person => person.id !== personProfile.id)), setFilteredPersons(filteredPersons.filter(person => person.id !== personProfile.id))))
+        .catch(error => {updateError(personName)
+                         console.log(error.name)
+                        })
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
+      <Error message={errorMessage} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
       <h2>Add a new entry</h2>
       <PersonForm addEntryToPersons={addEntryToPersons} newName={newName} handleAddedNameChange={handleAddedNameChange} newNumber={newNumber} handleAddedNumberChange={handleAddedNumberChange} />
