@@ -10,7 +10,7 @@ const App = () => {
   const [displayCountry, setDisplayCountry] = useState([])
 
   const createAllCountriesList = (allCountries) => {
-    const filteredCountriesNames = allCountries.map(country => ({ name: country.name.common, display: false }))
+    const filteredCountriesNames = allCountries.map((country, index) => ({ name: country.name.common, display: false, id: index + 1 }))
     setallCountriesList(filteredCountriesNames)
     setCountries(countries)
   }
@@ -38,17 +38,18 @@ const App = () => {
 
   const determineDisplayLogic = (countriesList) => {
     if (countriesList.length > 10) {
-      const countriesDisplayStatus = [{ name: 'Too many matches, specify another filter', display: false }]
+      const countriesDisplayStatus = [{ name: 'Too many matches, specify another filter', display: false, id: 0 }]
       setCountries(countriesDisplayStatus)
     }
     else if (countriesList.length > 1 && countriesList.length < 11) {
       setCountries(countriesList)
     }
     else if (countriesList.length > 0) {
-      console.log('Single Filtered Country', countriesList[0])
+      const selectedCountry = allCountriesList.find(country => country.name === countriesList[0].name)
+      console.log('Single Filtered Country', selectedCountry)
       countriesService
-        .getSingleCountry(countriesList[0].name)
-        .then(country => setCountries([{ name: country.name.common, display: true, capital: country.capital, area: country.area, languages: country.languages, flag: country.flags.png }]))
+        .getSingleCountry(selectedCountry.name)
+        .then(country => setCountries([{ name: country.name.common, display: true, capital: country.capital, area: country.area, languages: country.languages, flag: country.flags.png, id: selectedCountry.id }]))
     }
   }
 
@@ -72,16 +73,17 @@ const App = () => {
   const showCountryDetails = (countryName) => {
     const selectedCountry = countries.find(country => country.name === countryName)
     const displayChange = !selectedCountry.display
+    const countryId = selectedCountry.id
     console.log('Show Display Countries: ', countries)
     countriesService
       .getSingleCountry(countryName)
-      .then(country => setDisplayCountry({ name: country.name.common, display: displayChange, capital: country.capital, area: country.area, languages: country.languages, flag: country.flags.png }))
+      .then(country => setDisplayCountry({ name: country.name.common, display: displayChange, capital: country.capital, area: country.area, languages: country.languages, flag: country.flags.png, id: countryId }))
   }
 
   return (
     <>
       <Filter searchValue={searchValue} handleSearchValue={handleSearchChange} />
-      {countries.map(country => <Country country={country} changeDisplayStatus={() => showCountryDetails(country.name)} />)}
+      {countries.map(country => <Country key={country.id} country={country} changeDisplayStatus={() => showCountryDetails(country.name)} />)}
     </>
   )
 }

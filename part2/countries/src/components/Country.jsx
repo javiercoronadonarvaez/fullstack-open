@@ -1,4 +1,5 @@
 const Country = ({ country, changeDisplayStatus }) => {
+  console.log('Country Key', country.id)
   if (!country.display) {
     if (country.name === 'Too many matches, specify another filter') {
       return (
