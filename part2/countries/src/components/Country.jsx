@@ -1,5 +1,4 @@
 const Country = ({ country, changeDisplayStatus }) => {
-  console.log('Country Key', country.id)
   if (!country.display) {
     if (country.name === 'Too many matches, specify another filter') {
       return (
@@ -18,6 +17,7 @@ const Country = ({ country, changeDisplayStatus }) => {
     }
   }
   else {
+    console.log('Country Parameter: ', country)
     const languageValues = Object.values(country.languages)
     return (
       <div>
@@ -30,6 +30,10 @@ const Country = ({ country, changeDisplayStatus }) => {
         </ul>
         <h2>Flag</h2>
         <img src={country.flag} />
+        <h2>Weather in {country.capital}</h2>
+        <p>Main Conditions: {country.weatherData.main}</p>
+        <p>Temperature: {country.weatherData.temperature} °F</p>
+        <p>Wind Speed: {country.weatherData.windSpeed} m/s</p>
       </div>
     )
   }
