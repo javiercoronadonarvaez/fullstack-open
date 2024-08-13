@@ -31,8 +31,8 @@ const App = () => {
     }, 2000);
   };
 
-  const updateError = (deletedPersonName) => {
-    setErrorMessage(deletedPersonName);
+  const updateError = (errorMessage) => {
+    setErrorMessage(errorMessage);
     setTimeout(() => {
       setErrorMessage(null);
     }, 5000);
@@ -100,37 +100,27 @@ const App = () => {
       return;
     }
     const newNameObject = {
-      //id: String(),
       name: newName,
       number: newNumber,
     };
-    // console.log("New Filter", newFilter);
-    // const filterAppliesToNewEntry = newNameObject.name
-    //   .toLowerCase()
-    //   .includes(newFilter.toLocaleLowerCase());
-    // console.log("Filter Applies to New Entry:", filterAppliesToNewEntry);
-    // if (filterAppliesToNewEntry) {
-    //   const newFilteredPersons = filteredPersons.concat(newNameObject);
-    //   setFilteredPersons(newFilteredPersons);
-    // }
-    phoneService.createNewEntry(newNameObject).then(
-      (newNameData) => (
-        setPersons(persons.concat(newNameData)),
-        updateNotification(newNameData.name)
-        //setFilteredPersons(filteredPersons.concat(newNameData))
+
+    phoneService
+      .createNewEntry(newNameObject)
+      .then(
+        (newNameData) => (
+          setPersons(persons.concat(newNameData)),
+          updateNotification(newNameData.name)
+        )
       )
-    );
-    setNotification(newNameObject.name);
+      .catch((error) => updateError(error.response.data.error));
     setNewName("");
     setNewNumber("");
   };
 
   const checkIfFiltered = () => {
-    console.log(newFilter);
     const filteredPersons = persons.filter((person) =>
       person.name.toLocaleLowerCase().includes(newFilter.toLocaleLowerCase())
     );
-    console.log(filteredPersons);
     setFilteredPersons(filteredPersons);
   };
 
@@ -146,13 +136,7 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     const currentFilter = event.target.value;
-    const newFilteredPersons = persons.filter((person) =>
-      person.name
-        .toLocaleLowerCase()
-        .includes(currentFilter.toLocaleLowerCase())
-    );
     setNewFilter(currentFilter);
-    setFilteredPersons(newFilteredPersons);
   };
 
   const deleteEntry = (personId, personName) => {
@@ -168,8 +152,7 @@ const App = () => {
             ),
             setFilteredPersons(
               filteredPersons.filter((person) => person.id !== personProfile.id)
-            ),
-            console.log(personProfile)
+            )
           )
         )
         .catch((error) => {
@@ -177,7 +160,6 @@ const App = () => {
           console.log(error.name);
         });
     }
-    console.log(filteredPersons);
   };
 
   return (
