@@ -104,28 +104,37 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
-    console.log("New Filter", newFilter);
-    const filterAppliesToNewEntry = newNameObject.name
-      .toLowerCase()
-      .includes(newFilter.toLocaleLowerCase());
-    console.log("Filter Applies to New Entry:", filterAppliesToNewEntry);
-    if (filterAppliesToNewEntry) {
-      const newFilteredPersons = filteredPersons.concat(newNameObject);
-      setFilteredPersons(newFilteredPersons);
-    }
-    phoneService
-      .createNewEntry(newNameObject)
-      .then(
-        (newNameData) => (
-          setPersons(persons.concat(newNameData)),
-          updateNotification(newNameData.name),
-          setFilteredPersons(filteredPersons.concat(newNameData))
-        )
-      );
+    // console.log("New Filter", newFilter);
+    // const filterAppliesToNewEntry = newNameObject.name
+    //   .toLowerCase()
+    //   .includes(newFilter.toLocaleLowerCase());
+    // console.log("Filter Applies to New Entry:", filterAppliesToNewEntry);
+    // if (filterAppliesToNewEntry) {
+    //   const newFilteredPersons = filteredPersons.concat(newNameObject);
+    //   setFilteredPersons(newFilteredPersons);
+    // }
+    phoneService.createNewEntry(newNameObject).then(
+      (newNameData) => (
+        setPersons(persons.concat(newNameData)),
+        updateNotification(newNameData.name)
+        //setFilteredPersons(filteredPersons.concat(newNameData))
+      )
+    );
     setNotification(newNameObject.name);
     setNewName("");
     setNewNumber("");
   };
+
+  const checkIfFiltered = () => {
+    console.log(newFilter);
+    const filteredPersons = persons.filter((person) =>
+      person.name.toLocaleLowerCase().includes(newFilter.toLocaleLowerCase())
+    );
+    console.log(filteredPersons);
+    setFilteredPersons(filteredPersons);
+  };
+
+  useEffect(checkIfFiltered, [persons, newFilter]);
 
   const handleAddedNameChange = (event) => {
     setNewName(event.target.value);
