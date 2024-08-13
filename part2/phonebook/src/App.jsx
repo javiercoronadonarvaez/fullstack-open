@@ -100,7 +100,7 @@ const App = () => {
       return;
     }
     const newNameObject = {
-      id: String(persons.length + 1),
+      //id: String(),
       name: newName,
       number: newNumber,
     };
@@ -118,7 +118,8 @@ const App = () => {
       .then(
         (newNameData) => (
           setPersons(persons.concat(newNameData)),
-          updateNotification(newNameData.name)
+          updateNotification(newNameData.name),
+          setFilteredPersons(filteredPersons.concat(newNameData))
         )
       );
     setNotification(newNameObject.name);
