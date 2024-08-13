@@ -40,12 +40,12 @@ const App = () => {
 
   const addEntryToPersons = (event) => {
     event.preventDefault();
-    if (newName === "" || newNumber === "") {
-      alert("The name or number is missing");
-      setNewName("");
-      setNewNumber("");
-      return;
-    }
+    // if (newName === "" || newNumber === "") {
+    //   alert("The name or number is missing");
+    //   setNewName("");
+    //   setNewNumber("");
+    //   return;
+    // }
 
     const repeatedNameBool = persons.some((person) => person.name === newName);
     const repeatedNumberBool = persons.some(
@@ -156,8 +156,7 @@ const App = () => {
           )
         )
         .catch((error) => {
-          updateError(personName);
-          console.log(error.name);
+          updateError(error.name);
         });
     }
   };
