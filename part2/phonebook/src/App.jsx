@@ -77,7 +77,8 @@ const App = () => {
                 ),
                 updateNotification(updatedProfile.name)
               )
-            );
+            )
+            .catch((error) => updateError(error.response.data.error));
           setNewName("");
           setNewNumber("");
           return;
