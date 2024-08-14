@@ -1,18 +1,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const mongoose = require("mongoose");
 const { info, error } = require("./utils/logger");
 const { MONGODB_URI, PORT } = require("./utils/config");
-
-const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number,
-});
-
-const Blog = mongoose.model("Blog", blogSchema);
+const mongoose = require("mongoose");
+const Blog = require("./models/blog");
 
 const mongoUrl = MONGODB_URI;
 mongoose
