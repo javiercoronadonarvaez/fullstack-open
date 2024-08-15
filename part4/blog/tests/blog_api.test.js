@@ -54,9 +54,21 @@ describe("Blog HTTP Testing", () => {
   });
 
   test.only("Verify that if title or url properties are missing, backend respons with status 400", async () => {
-    const faultyBlogBody = {
+    let faultyBlogBody = {
       author: "Unkown Author",
       url: "https://test.com/",
+      likes: 190,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(faultyBlogBody)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    faultyBlogBody = {
+      title: "TEST",
+      author: "Unkown Author",
       likes: 190,
     };
 
