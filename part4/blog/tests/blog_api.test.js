@@ -26,6 +26,13 @@ describe("Blog HTTP Testing", () => {
 
     assert.strictEqual(blogs.body.length, helper.initialBlogs.length);
   });
+
+  test.only("Verify the unique identifier is named id", async () => {
+    const blogs = await api.get("/api/blogs");
+    blogs.body.forEach((blog) =>
+      assert.strictEqual(Object.keys(blog)[4], "id")
+    );
+  });
 });
 
 after(async () => {
