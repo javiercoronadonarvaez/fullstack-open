@@ -53,6 +53,25 @@ describe("Blog HTTP Testing", () => {
     assert.strictEqual(newBlogs.length, helper.initialBlogs.length + 1);
   });
 
+  test.only("Verify that if likes property is missing, it will default to 0", async () => {
+    const newBlogBody = {
+      title: "TEST",
+      author: "Unkown Author",
+      url: "https://test.com/",
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlogBody)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const newBlogs = await helper.blogsInDb();
+    const lastBlog = newBlogs.find((blog) => blog.title === newBlogBody.title);
+
+    assert.strictEqual(lastBlog.likes, 0);
+  });
+
   test.only("Verify that if title or url properties are missing, backend respons with status 400", async () => {
     let faultyBlogBody = {
       author: "Unkown Author",
