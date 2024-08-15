@@ -20,7 +20,7 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   const listAuthorPublications = blogs.reduce((authorList, blog) => {
     let currentAuthor = authorList.find(
-      (author) => author.author === blog.author
+      (authorObject) => authorObject.author === blog.author
     );
     if (currentAuthor) {
       currentAuthor.blogs += 1;
@@ -29,7 +29,7 @@ const mostBlogs = (blogs) => {
     }
     return authorList;
   }, []);
-  console.log(listAuthorPublications);
+
   const mostBlogsAuthor = listAuthorPublications.reduce(
     (maxBlogsAuthor, authorObject) =>
       authorObject.blogs >= maxBlogsAuthor.blogs
@@ -37,8 +37,32 @@ const mostBlogs = (blogs) => {
         : maxBlogsAuthor,
     listAuthorPublications[0]
   );
-  console.log("Most Published", mostBlogsAuthor);
+
   return mostBlogsAuthor;
+};
+
+const mostLikes = (blogs) => {
+  const listNumberLikesPerAuthor = blogs.reduce((listLikesPerAuthor, blog) => {
+    let currentAuthor = listLikesPerAuthor.find(
+      (authorObject) => authorObject.author === blog.author
+    );
+    if (currentAuthor) {
+      currentAuthor.likes += blog.likes;
+    } else {
+      listLikesPerAuthor.push({ author: blog.author, likes: blog.likes });
+    }
+    return listLikesPerAuthor;
+  }, []);
+
+  const authorWithMostLikes = listNumberLikesPerAuthor.reduce(
+    (mostLikesPerAuthor, authorObject) =>
+      authorObject.likes >= mostLikesPerAuthor.likes
+        ? authorObject
+        : mostLikesPerAuthor,
+    listNumberLikesPerAuthor[0]
+  );
+
+  return authorWithMostLikes;
 };
 
 module.exports = {
@@ -46,4 +70,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
