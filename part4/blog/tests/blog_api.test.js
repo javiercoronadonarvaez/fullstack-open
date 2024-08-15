@@ -97,6 +97,17 @@ describe("Blog HTTP Testing", () => {
       .expect(400)
       .expect("Content-Type", /application\/json/);
   });
+
+  test.only("Verify that if post is deleted, the current number of Blogs is less than the original by 1", async () => {
+    const currentBlogs = await helper.blogsInDb();
+    const firstBlog = currentBlogs[0];
+
+    await api.delete(`/api/blogs/${firstBlog.id}`).expect(204);
+
+    const blogsWithoutDeletedOne = await helper.blogsInDb();
+
+    assert.strictEqual(blogsWithoutDeletedOne.length, currentBlogs.length - 1);
+  });
 });
 
 after(async () => {
