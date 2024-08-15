@@ -10,7 +10,6 @@ const Blog = require("../models/blog");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  console.log("After delete");
 
   for (let blog of helper.initialBlogs) {
     let newBlog = new Blog(blog);
@@ -20,12 +19,12 @@ beforeEach(async () => {
 
 describe("Blog HTTP Testing", () => {
   test.only("GET call retrieves the correct amount of blogs in JSON format", async () => {
-    const notes = await api
+    const blogs = await api
       .get("/api/blogs")
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    assert.strictEqual(notes.body.length, helper.initialBlogs.length);
+    assert.strictEqual(blogs.body.length, helper.initialBlogs.length);
   });
 });
 
