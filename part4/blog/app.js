@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+require("express-async-errors");
 const cors = require("cors");
 const { info, errorInfo } = require("./utils/logger");
 const { MONGODB_URI, PORT } = require("./utils/config");

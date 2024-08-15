@@ -52,6 +52,20 @@ describe("Blog HTTP Testing", () => {
 
     assert.strictEqual(newBlogs.length, helper.initialBlogs.length + 1);
   });
+
+  test.only("Verify that if title or url properties are missing, backend respons with status 400", async () => {
+    const faultyBlogBody = {
+      author: "Unkown Author",
+      url: "https://test.com/",
+      likes: 190,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(faultyBlogBody)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+  });
 });
 
 after(async () => {
