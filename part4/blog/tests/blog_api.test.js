@@ -33,6 +33,25 @@ describe("Blog HTTP Testing", () => {
       assert.strictEqual(Object.keys(blog)[4], "id")
     );
   });
+
+  test.only("Verify HTTP POST successfully creates a new blog post", async () => {
+    const newBlogBody = {
+      title: "TEST",
+      author: "Unkown Author",
+      url: "https://test.com/",
+      likes: 190,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlogBody)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const newBlogs = await helper.blogsInDb();
+
+    assert.strictEqual(newBlogs.length, helper.initialBlogs.length + 1);
+  });
 });
 
 after(async () => {
