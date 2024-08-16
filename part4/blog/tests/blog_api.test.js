@@ -108,6 +108,31 @@ describe("Blog HTTP Testing", () => {
 
     assert.strictEqual(blogsWithoutDeletedOne.length, currentBlogs.length - 1);
   });
+
+  test.only("Verify that PUT request actually modifies the number of likes in Blog", async () => {
+    const currentBlogs = await helper.blogsInDb();
+    const firstBlog = currentBlogs[0];
+    const updatedBody = {
+      title: "Modified title",
+      author: "Another Author",
+      url: "https://test.com/",
+      likes: 100000,
+    };
+
+    await api
+      .put(`/api/blogs/${firstBlog.id}`)
+      .send(updatedBody)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    const blogsWithUpdatedOne = await helper.blogsInDb();
+    const firstUpdatedBlog = blogsWithUpdatedOne[0];
+
+    assert.notStrictEqual(firstUpdatedBlog.title, firstBlog.title);
+    assert.notStrictEqual(firstUpdatedBlog.author, firstBlog.author);
+    assert.notStrictEqual(firstUpdatedBlog.url, firstBlog.url);
+    assert.notStrictEqual(firstUpdatedBlog.likes, firstBlog.likes);
+  });
 });
 
 after(async () => {
