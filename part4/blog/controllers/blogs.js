@@ -75,7 +75,11 @@ blogsRouter.delete(
   }
 )
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.put('/:id', middleware.userExtractor, async (request, response) => {
+  if (!request.decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
   const { title, author, url, likes } = request.body
 
   const updatedBlog = await Blog.findByIdAndUpdate(
