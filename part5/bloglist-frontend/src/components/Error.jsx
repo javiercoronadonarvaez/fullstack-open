@@ -1,3 +1,8 @@
-const Error = ({ errorMessage }) => <div>{errorMessage}</div>;
+const Error = ({ errorMessage }) => {
+  console.log("Error Message", errorMessage);
+  if (errorMessage) {
+    return <div className="error">{errorMessage}</div>;
+  }
+};
 
 export default Error;
