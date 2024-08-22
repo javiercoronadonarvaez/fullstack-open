@@ -1,5 +1,4 @@
 const Notification = ({ newBlog }) => {
-  console.log(Object.keys(newBlog).length);
   if (Object.keys(newBlog).length > 0) {
     return (
       <div className="notification">

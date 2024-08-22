@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
-import Login from "./components/Login";
+import LoginForm from "./components/LoginForm";
 import Error from "./components/Error";
 import Notification from "./components/Notification";
-import BlogForm from "./components/AddBlog";
+import BlogForm from "./components/BlogForm";
 import LoggedInUser from "./components/LoggedInUser";
+import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -32,29 +33,54 @@ const App = () => {
     }
   }, []);
 
+  const loginForm = () => {
+    return (
+      <LoginForm
+        onLoginSubmit={handleLogin}
+        username={username}
+        onUsernameChange={handleUsernameChange}
+        password={password}
+        onPasswordChange={handlePasswordChange}
+      />
+    );
+  };
+
+  const newNoteRef = useRef();
+
+  const noteForm = () => {
+    return (
+      <Togglable buttonLabel="New Note" refs={newNoteRef}>
+        <BlogForm
+          addNewBlog={addBlog}
+          newTitle={newTitle}
+          onTitleChange={handleTitleChange}
+          newAuthor={newAuthor}
+          onAuthorChange={handleAuthorChange}
+          newUrl={newUrl}
+          onUrlChange={handleUrlChange}
+        />
+      </Togglable>
+    );
+  };
+
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
-    console.log(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-    console.log(event.target.value);
   };
 
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value);
-    console.log(event.target.value);
   };
 
   const handleAuthorChange = (event) => {
     setNewAuthor(event.target.value);
-    console.log(event.target.value);
   };
 
   const handleUrlChange = (event) => {
     setNewUrl(event.target.value);
-    console.log(event.target.value);
   };
 
   const handleLogout = (event) => {
@@ -106,20 +132,12 @@ const App = () => {
     <div>
       <Error errorMessage={errorMessage} />
       {user === null ? (
-        <div>
-          <Login
-            onLoginSubmit={handleLogin}
-            username={username}
-            onUsernameChange={handleUsernameChange}
-            password={password}
-            onPasswordChange={handlePasswordChange}
-          />
-        </div>
+        loginForm()
       ) : (
         <div>
           <LoggedInUser user={user} onLogoutClick={handleLogout} />
           <Notification newBlog={newBlog} />
-          <BlogForm
+          {/* <BlogForm
             addNewBlog={addBlog}
             newTitle={newTitle}
             onTitleChange={handleTitleChange}
@@ -127,7 +145,8 @@ const App = () => {
             onAuthorChange={handleAuthorChange}
             newUrl={newUrl}
             onUrlChange={handleUrlChange}
-          />
+          /> */}
+          {noteForm()}
           <h2>blogs</h2>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
