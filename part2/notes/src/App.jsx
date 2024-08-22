@@ -17,6 +17,20 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [loginVisible, setLoginVisible] = useState(false);
 
+  const loginForm = () => {
+    return (
+      <LoginForm
+        username={username}
+        password={password}
+        handleSubmit={handleLogin}
+        handleUsernameChange={handleUsernameChange}
+        handlePasswordChange={handlePasswordChange}
+        loginVisible={loginVisible}
+        handleLoginVisible={handleLoginVisible}
+      />
+    );
+  };
+
   const noteForm = () => (
     <form onSubmit={addNote}>
       <input value={newNote} onChange={handleNoteChange} />
@@ -148,41 +162,18 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      {/* <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            //onChange={({ target }) => setUsername(target.value)}
-            onChange={handleUsernameChange}
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            //onChange={({ target }) => setPassword(target.value)}
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form> */}
       {user === null ? (
-        //loginForm()
-        <LoginForm
-          username={username}
-          password={password}
-          handleSubmit={handleLogin}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
-          loginVisible={loginVisible}
-          handleLoginVisible={handleLoginVisible}
-        />
+        loginForm()
       ) : (
+        // <LoginForm
+        //   username={username}
+        //   password={password}
+        //   handleSubmit={handleLogin}
+        //   handleUsernameChange={handleUsernameChange}
+        //   handlePasswordChange={handlePasswordChange}
+        //   loginVisible={loginVisible}
+        //   handleLoginVisible={handleLoginVisible}
+        // />
         <div>
           <p>{user.name} logged-in</p>
           {noteForm()}
