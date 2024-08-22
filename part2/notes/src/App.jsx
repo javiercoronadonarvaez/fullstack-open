@@ -4,6 +4,7 @@ import loginService from "./services/login";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
 import Footer from "./components/Footer";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -14,32 +15,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          //onChange={({ target }) => setUsername(target.value)}
-          onChange={handleUsernameChange}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          //onChange={({ target }) => setPassword(target.value)}
-          onChange={handlePasswordChange}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  );
+  const [loginVisible, setLoginVisible] = useState(false);
 
   const noteForm = () => (
     <form onSubmit={addNote}>
@@ -164,6 +140,10 @@ const App = () => {
     setPassword(event.target.value);
   };
 
+  const handleLoginVisible = () => {
+    setLoginVisible(!loginVisible);
+  };
+
   return (
     <div>
       <h1>Notes</h1>
@@ -192,7 +172,16 @@ const App = () => {
         <button type="submit">login</button>
       </form> */}
       {user === null ? (
-        loginForm()
+        //loginForm()
+        <LoginForm
+          username={username}
+          password={password}
+          handleSubmit={handleLogin}
+          handleUsernameChange={handleUsernameChange}
+          handlePasswordChange={handlePasswordChange}
+          loginVisible={loginVisible}
+          handleLoginVisible={handleLoginVisible}
+        />
       ) : (
         <div>
           <p>{user.name} logged-in</p>
