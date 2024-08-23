@@ -1,21 +1,29 @@
 .notification {
-    color: green;
-    background: lightgrey;
-    display: inline-block;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+  color: green;
+  background: lightgrey;
+  display: inline-block;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .error {
-    color: red;
-    background: lightgrey;
-    display: inline-block;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+  color: red;
+  background: lightgrey;
+  display: inline-block;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.blog {
+  display: block;
+  font-size: 20px;
+  border-style: solid;
+  margin-bottom: 5px;
+  box-sizing: border-box;
 }

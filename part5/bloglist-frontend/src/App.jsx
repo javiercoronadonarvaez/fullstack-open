@@ -52,21 +52,8 @@ const App = () => {
     );
   };
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleLogout = (event) => {
-    event.preventDefault();
-    window.localStorage.removeItem("loggedNoteappUser");
-    setUser(null);
-  };
-
   const addBlog = async (newBlogObject) => {
+    newBlogRef.current.toggleVisibility();
     await blogService.create(newBlogObject).then((blog) => {
       setBlogs(blogs.concat(blog)),
         setNewBlog(blog),
@@ -74,7 +61,25 @@ const App = () => {
           setNewBlog({});
         }, 4000);
     });
-    newBlogRef.current.toggleVisibility();
+  };
+
+  const incrementLikeCount = async (newBlogObject) => {
+    await blogService.incrementBlogLike(newBlogObject).then((blog) => {
+      console.log("Updated Blog: ", blog),
+        setBlogs(
+          blogs.map((currentBlog) =>
+            currentBlog.id === blog.id ? blog : currentBlog
+          )
+        );
+    });
+  };
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
   };
 
   const handleLogin = async (event) => {
@@ -97,6 +102,12 @@ const App = () => {
     }
   };
 
+  const handleLogout = (event) => {
+    event.preventDefault();
+    window.localStorage.removeItem("loggedNoteappUser");
+    setUser(null);
+  };
+
   return (
     <div>
       <Error errorMessage={errorMessage} />
@@ -109,7 +120,11 @@ const App = () => {
           {blogForm()}
           <h2>blogs</h2>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              incrementLikeCount={incrementLikeCount}
+            />
           ))}
         </div>
       )}
