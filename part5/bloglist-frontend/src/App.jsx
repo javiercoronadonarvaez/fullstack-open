@@ -52,6 +52,23 @@ const App = () => {
     );
   };
 
+  const blogDisplay = () => {
+    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
+    return (
+      <div>
+        <h2>blogs</h2>
+        {sortedBlogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            incrementLikeCount={incrementLikeCount}
+            deleteBlogFromNotes={deleteBlogFromNotes}
+          />
+        ))}
+      </div>
+    );
+  };
+
   const addBlog = async (newBlogObject) => {
     newBlogRef.current.toggleVisibility();
     await blogService.create(newBlogObject).then((blog) => {
@@ -72,6 +89,12 @@ const App = () => {
           )
         );
     });
+  };
+
+  const deleteBlogFromNotes = async (blogId) => {
+    const blogsWithoutDeletedBlog = blogs.filter((blog) => blog.id !== blogId);
+    setBlogs(blogsWithoutDeletedBlog);
+    await blogService.deleteBlog(blogId);
   };
 
   const handleUsernameChange = (event) => {
@@ -118,14 +141,15 @@ const App = () => {
           <LoggedInUser user={user} onLogoutClick={handleLogout} />
           <Notification newBlog={newBlog} />
           {blogForm()}
-          <h2>blogs</h2>
+          {blogDisplay()}
+          {/* <h2>blogs</h2>
           {blogs.map((blog) => (
             <Blog
               key={blog.id}
               blog={blog}
               incrementLikeCount={incrementLikeCount}
             />
-          ))}
+          ))} */}
         </div>
       )}
     </div>

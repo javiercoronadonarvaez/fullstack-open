@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog, incrementLikeCount }) => {
+const Blog = ({ blog, incrementLikeCount, deleteBlogFromNotes }) => {
   const [display, setDisplay] = useState(false);
   const [numLikes, setNumLikes] = useState(blog.likes);
 
@@ -19,6 +19,14 @@ const Blog = ({ blog, incrementLikeCount }) => {
     incrementLikeCount(newBlogObject);
   };
 
+  const handleDelete = () => {
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
+      {
+        console.log("Deleted Post"), deleteBlogFromNotes(blog.id);
+      }
+    }
+  };
+
   const showAll = { display: display ? "" : "none" };
   const showLimited = { display: display ? "none" : "" };
 
@@ -27,19 +35,20 @@ const Blog = ({ blog, incrementLikeCount }) => {
       <div style={showLimited} className="blog">
         <p>
           {blog.title} {blog.author}
+          <button onClick={handleDisplayButton}>view</button>
         </p>
-        <button onClick={handleDisplayButton}>view</button>
       </div>
       <div style={showAll} className="blog">
         <p>
           {blog.title} {blog.author}
+          <button onClick={handleDisplayButton}>hide</button>
         </p>
         <p>{blog.url}</p>
         <p>
           Likes: {numLikes} <button onClick={incrementLikeDisplay}>like</button>
         </p>
         <p>{blog.author}</p>
-        <button onClick={handleDisplayButton}>hide</button>
+        <button onClick={handleDelete}>delete</button>
       </div>
     </div>
   );

@@ -25,9 +25,19 @@ const incrementBlogLike = async (newObject) => {
   return response.data;
 };
 
+const deleteBlog = async (blogId) => {
+  const blogUrl = `${baseUrl}/${blogId}`;
+  console.log("BLOG URL: ", blogUrl);
+  const config = {
+    headers: { Authorization: token },
+  };
+  const response = await axios.delete(blogUrl, config);
+  return response.data;
+};
+
 const getAll = () => {
   const request = axios.get(baseUrl);
   return request.then((response) => response.data);
 };
 
-export default { getAll, setToken, create, incrementBlogLike };
+export default { getAll, setToken, create, incrementBlogLike, deleteBlog };
