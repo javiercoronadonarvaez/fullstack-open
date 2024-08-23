@@ -5,6 +5,6 @@ const LoggedInUser = ({ user, onLogoutClick }) => (
       <button type="submit">logout</button>
     </form>
   </div>
-);
+)
 
-export default LoggedInUser;
+export default LoggedInUser

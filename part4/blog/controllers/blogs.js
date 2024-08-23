@@ -60,13 +60,14 @@ blogsRouter.delete(
       return response.status(401).json({ error: 'token invalid' })
     }
     const blog = await Blog.findById(request.params.id)
-    console.log('Parameter ID', request.params.id)
-    console.log('Retrieved Blog', blog)
     const user = request.user
     //console.log('Decoded Token ID', decodedToken.id)
     if (blog.user.toString() === user.id.toString()) {
       await Blog.findByIdAndDelete(request.params.id)
-      response.status(204).end()
+      //response.status(204).end()
+      console.log('Deleted Blog Backend: ', blog)
+      //response.status(204).json(blog);
+      response.json(blog)
     } else {
       return response
         .status(401)

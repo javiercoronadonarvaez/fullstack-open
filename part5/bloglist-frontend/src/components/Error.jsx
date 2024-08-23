@@ -1,7 +1,7 @@
 const Error = ({ errorMessage }) => {
   if (errorMessage) {
-    return <div className="error">{errorMessage}</div>;
+    return <div className="error">{errorMessage}</div>
   }
-};
+}
 
-export default Error;
+export default Error

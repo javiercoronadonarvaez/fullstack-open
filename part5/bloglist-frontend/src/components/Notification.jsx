@@ -4,8 +4,8 @@ const Notification = ({ newBlog }) => {
       <div className="notification">
         A new Blog {newBlog.title} from {newBlog.author} added
       </div>
-    );
+    )
   }
-};
+}
 
-export default Notification;
+export default Notification

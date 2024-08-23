@@ -1,34 +1,34 @@
-import { useState } from "react";
+import { useState } from 'react'
 
 const Blog = ({ blog, incrementLikeCount, deleteBlogFromNotes }) => {
-  const [display, setDisplay] = useState(false);
-  const [numLikes, setNumLikes] = useState(blog.likes);
+  const [display, setDisplay] = useState(false)
+  const [numLikes, setNumLikes] = useState(blog.likes)
 
   const handleDisplayButton = () => {
-    setDisplay(!display);
-  };
+    setDisplay(!display)
+  }
 
   const incrementLikeDisplay = () => {
-    const increasedNumLikes = numLikes + 1;
-    setNumLikes(increasedNumLikes);
+    const increasedNumLikes = numLikes + 1
+    setNumLikes(increasedNumLikes)
     const newBlogObject = {
       ...blog,
       likes: increasedNumLikes,
-    };
-    console.log("New Blog Object: ", newBlogObject);
-    incrementLikeCount(newBlogObject);
-  };
+    }
+    console.log('New Blog Object: ', newBlogObject)
+    incrementLikeCount(newBlogObject)
+  }
 
   const handleDelete = () => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       {
-        console.log("Deleted Post"), deleteBlogFromNotes(blog.id);
+        console.log('Deleted Post'), deleteBlogFromNotes(blog.id)
       }
     }
-  };
+  }
 
-  const showAll = { display: display ? "" : "none" };
-  const showLimited = { display: display ? "none" : "" };
+  const showAll = { display: display ? '' : 'none' }
+  const showLimited = { display: display ? 'none' : '' }
 
   return (
     <div>
@@ -51,7 +51,7 @@ const Blog = ({ blog, incrementLikeCount, deleteBlogFromNotes }) => {
         <button onClick={handleDelete}>delete</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
