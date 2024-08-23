@@ -15,9 +15,6 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [newBlog, setNewBlog] = useState({});
-  const [newTitle, setNewTitle] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newUrl, setNewUrl] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
@@ -45,20 +42,12 @@ const App = () => {
     );
   };
 
-  const newNoteRef = useRef();
+  const newBlogRef = useRef();
 
-  const noteForm = () => {
+  const blogForm = () => {
     return (
-      <Togglable buttonLabel="New Note" refs={newNoteRef}>
-        <BlogForm
-          addNewBlog={addBlog}
-          newTitle={newTitle}
-          onTitleChange={handleTitleChange}
-          newAuthor={newAuthor}
-          onAuthorChange={handleAuthorChange}
-          newUrl={newUrl}
-          onUrlChange={handleUrlChange}
-        />
+      <Togglable buttonLabel="New Note" ref={newBlogRef}>
+        <BlogForm createNewBlog={addBlog} />
       </Togglable>
     );
   };
@@ -71,41 +60,21 @@ const App = () => {
     setPassword(event.target.value);
   };
 
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value);
-  };
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value);
-  };
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value);
-  };
-
   const handleLogout = (event) => {
     event.preventDefault();
     window.localStorage.removeItem("loggedNoteappUser");
     setUser(null);
   };
 
-  const addBlog = async (event) => {
-    event.preventDefault();
-    const blogBody = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-    };
-    blogService.create(blogBody).then((blog) => {
+  const addBlog = async (newBlogObject) => {
+    await blogService.create(newBlogObject).then((blog) => {
       setBlogs(blogs.concat(blog)),
         setNewBlog(blog),
         setTimeout(() => {
           setNewBlog({});
-        }, 4000),
-        setNewTitle(""),
-        setNewAuthor(""),
-        setNewUrl("");
+        }, 4000);
     });
+    newBlogRef.current.toggleVisibility();
   };
 
   const handleLogin = async (event) => {
@@ -137,16 +106,7 @@ const App = () => {
         <div>
           <LoggedInUser user={user} onLogoutClick={handleLogout} />
           <Notification newBlog={newBlog} />
-          {/* <BlogForm
-            addNewBlog={addBlog}
-            newTitle={newTitle}
-            onTitleChange={handleTitleChange}
-            newAuthor={newAuthor}
-            onAuthorChange={handleAuthorChange}
-            newUrl={newUrl}
-            onUrlChange={handleUrlChange}
-          /> */}
-          {noteForm()}
+          {blogForm()}
           <h2>blogs</h2>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
