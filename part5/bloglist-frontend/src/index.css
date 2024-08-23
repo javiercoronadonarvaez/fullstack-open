@@ -20,7 +20,15 @@
   margin-bottom: 10px;
 }
 
-.blog {
+.blogShowLimited {
+  display: block;
+  font-size: 20px;
+  border-style: solid;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+.blogShowAll {
   display: block;
   font-size: 20px;
   border-style: solid;

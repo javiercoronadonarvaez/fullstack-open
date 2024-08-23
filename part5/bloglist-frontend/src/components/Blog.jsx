@@ -32,13 +32,13 @@ const Blog = ({ blog, incrementLikeCount, deleteBlogFromNotes }) => {
 
   return (
     <div>
-      <div style={showLimited} className="blog">
+      <div style={showLimited} className="blogShowLimited">
         <p>
           {blog.title} {blog.author}
           <button onClick={handleDisplayButton}>view</button>
         </p>
       </div>
-      <div style={showAll} className="blog">
+      <div style={showAll} className="blogShowAll">
         <p>
           {blog.title} {blog.author}
           <button onClick={handleDisplayButton}>hide</button>
