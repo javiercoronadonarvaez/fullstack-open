@@ -4,17 +4,17 @@ const Note = ({ note, toggleImportance, value, handleUpdatedContent, updateNoteC
 
   return (
     <li className="note">
-      {note.content} 
+      {note.content}
       <button style={{ marginLeft: '10px' }} onClick={toggleImportance}>{label}</button>
       <form key={note.id} onSubmit={updateNoteContent} >
-        <input 
+        <input
           value={value}
           onChange={handleUpdatedContent}
         />
         <button type="submit">modify</button>
-      </form>   
+      </form>
     </li>
   )
 }
-  
+
 export default Note
