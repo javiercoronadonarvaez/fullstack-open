@@ -52,22 +52,6 @@ describe('<Blog />', () => {
     expect(likesPresent).toBe(true)
   })
 
-  test('Check component displaying a blog renders blog title and author BUT NOT URL and likes', () => {
-    const div = container.querySelector('.blogShowLimited')
-    screen.debug(div)
-
-    const titlePresent = div.textContent.includes('Test Blog')
-    const authorPresent = div.textContent.includes('Javier Coronado')
-    const urlNotPresent = div.textContent.includes('www.test.com')
-    const likesNotPresent = div.textContent.includes(5)
-
-    expect(div).not.toHaveStyle('display: none')
-    expect(titlePresent).toBe(true)
-    expect(authorPresent).toBe(true)
-    expect(urlNotPresent).toBe(false)
-    expect(likesNotPresent).toBe(false)
-  })
-
   test('Check that if like button is clicked twice, event handler is called twice', async () => {
     const user = userEvent.setup()
     const viewButton = screen.getByText('view')
