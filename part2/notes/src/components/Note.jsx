@@ -1,16 +1,20 @@
-const Note = ({ note, toggleImportance, value, handleUpdatedContent, updateNoteContent }) => {
-  const label = note.important
-    ? 'make not important' : 'make important'
+const Note = ({
+  note,
+  toggleImportance,
+  value,
+  handleUpdatedContent,
+  updateNoteContent,
+}) => {
+  const label = note.important ? 'make not important' : 'make important'
 
   return (
     <li className="note">
-      {note.content}
-      <button style={{ marginLeft: '10px' }} onClick={toggleImportance}>{label}</button>
-      <form key={note.id} onSubmit={updateNoteContent} >
-        <input
-          value={value}
-          onChange={handleUpdatedContent}
-        />
+      <span>{note.content}</span>
+      <button style={{ marginLeft: '10px' }} onClick={toggleImportance}>
+        {label}
+      </button>
+      <form key={note.id} onSubmit={updateNoteContent}>
+        <input value={value} onChange={handleUpdatedContent} />
         <button type="submit">modify</button>
       </form>
     </li>
