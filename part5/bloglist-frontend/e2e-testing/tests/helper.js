@@ -5,12 +5,20 @@ const loginWith = async (page, username, password) => {
 }
 
 const createBlog = async (page, title, author, url) => {
+  const initialBlogCount = await page.locator('.blogShowLimited').count()
+
   await page.getByTestId('title').fill(title)
   await page.getByTestId('author').fill(author)
   await page.getByTestId('url').fill(url)
   await page.getByRole('button', { name: 'create' }).click()
-  const blogLocator = await page.locator('.blogShowLimited')
-  await blogLocator.waitFor()
+
+  await page.waitForFunction(
+    (initialCount) =>
+      document.querySelectorAll('.blogShowLimited').length > initialCount,
+    initialBlogCount
+  )
+  // const blogLocator = await page.locator('.blogShowLimited')
+  // await blogLocator.waitFor()
 }
 
 export { loginWith, createBlog }

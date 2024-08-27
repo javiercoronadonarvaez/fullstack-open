@@ -59,7 +59,6 @@ const App = () => {
         <h2>blogs</h2>
         {sortedBlogs.map((blog) => (
           <Blog
-            data-testid="Blog"
             key={blog.id}
             user={user}
             blog={blog}

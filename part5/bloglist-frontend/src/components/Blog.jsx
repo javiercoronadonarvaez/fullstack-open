@@ -34,7 +34,7 @@ const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
   }
 
   return (
-    <div>
+    <div className="Blog">
       <div style={showLimited} className="blogShowLimited">
         <p>
           {blog.title} {blog.author}
@@ -47,7 +47,7 @@ const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
           <button onClick={handleDisplayButton}>hide</button>
         </p>
         <p>{blog.url}</p>
-        <p>
+        <p className="numLikes">
           Likes: {numLikes} <button onClick={incrementLikeDisplay}>like</button>
         </p>
         <p>{blog.author}</p>

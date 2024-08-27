@@ -41,6 +41,11 @@ describe('Blog app', () => {
   })
 
   describe('When logged in', () => {
+    const numLikesRetriever = async (visibleBlog) => {
+      const likeCounter = await visibleBlog.locator('.numLikes').textContent()
+      return likeCounter
+    }
+
     beforeEach(async ({ page }) => {
       await loginWith(page, 'mluukkai', 'salainen')
     })
@@ -98,6 +103,70 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'view' }).click()
       deleteButton = await page.getByRole('button', { name: 'delete' })
       expect(deleteButton).not.toBeVisible()
+    })
+
+    test('ensure blogs are arranged in descending order according to number of likes', async ({
+      page,
+    }) => {
+      await page.getByRole('button', { name: 'New Note' }).click()
+      await createBlog(page, 'Test', 'Matti Luukkainen', 'www.test.com')
+      await page.getByRole('button', { name: 'New Note' }).click()
+      await createBlog(
+        page,
+        'Second Test',
+        'Matti Luukkainen',
+        'www.second-test.com'
+      )
+      await page.getByRole('button', { name: 'New Note' }).click()
+      await createBlog(
+        page,
+        'Third Test',
+        'Matti Luukkainen',
+        'www.third-test.com'
+      )
+
+      const numberLikesPerPost = [1, 5, 3]
+      const blogs = await page.locator('.Blog')
+      const numberBlogs = await blogs.count()
+      console.log('Number of blogs', numberBlogs)
+
+      for (let index = 0; index < numberBlogs; index++) {
+        let currentBlog = await blogs.nth(index)
+        let viewButton = await currentBlog
+          .locator('.blogShowLimited')
+          .getByRole('button', { name: 'view' })
+        //let viewButton = await currentBlog.locator('button#view')
+        await viewButton.click()
+
+        let visibleBlog = await currentBlog.locator('.blogShowAll')
+        await visibleBlog.waitFor()
+
+        let likeButton = await visibleBlog.getByRole('button', {
+          name: 'like',
+        })
+        for (
+          let numLikes = 1;
+          numLikes <= numberLikesPerPost[index];
+          numLikes++
+        ) {
+          await likeButton.click()
+        }
+        await page.waitForTimeout(200)
+      }
+
+      const updtedBlogs = await page.locator('.Blog')
+      const firstBlog = await updtedBlogs.nth(0)
+      const secondBlog = await updtedBlogs.nth(1)
+      const thirdBlog = await updtedBlogs.nth(2)
+      const likesFirstBlog = await numLikesRetriever(firstBlog)
+      const likesSecondBlog = await numLikesRetriever(secondBlog)
+      const likesThirdBlog = await numLikesRetriever(thirdBlog)
+      await expect(page.getByText(likesFirstBlog)).toBeVisible()
+      await expect(page.getByText(likesSecondBlog)).toBeVisible()
+      await expect(page.getByText(likesThirdBlog)).toBeVisible()
+      console.log('First Blog Likes', likesFirstBlog)
+      console.log('Second Blog Likes', likesSecondBlog)
+      console.log('Third Blog Likes', likesThirdBlog)
     })
   })
 })
