@@ -1,6 +1,8 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, incrementLikeCount, deleteBlogFromNotes }) => {
+const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
+  console.log(blog)
+  console.log(user)
   const [display, setDisplay] = useState(false)
   const [numLikes, setNumLikes] = useState(blog.likes)
 

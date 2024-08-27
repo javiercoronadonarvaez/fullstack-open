@@ -60,6 +60,7 @@ const App = () => {
         {sortedBlogs.map((blog) => (
           <Blog
             key={blog.id}
+            user={user}
             blog={blog}
             incrementLikeCount={incrementLikeCount}
             deleteBlogFromNotes={deleteBlogFromNotes}
