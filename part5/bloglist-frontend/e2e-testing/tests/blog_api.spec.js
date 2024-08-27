@@ -52,5 +52,16 @@ describe('Blog app', () => {
       const blogLocator = await page.locator('.blogShowLimited')
       await expect(blogLocator).toHaveText(new RegExp(newContent))
     })
+
+    test.only('a blog can be liked', async ({ page }) => {
+      await page.getByRole('button', { name: 'New Note' }).click()
+      await createBlog(page, 'Test', 'Matti Luukkainen', 'www.test.com')
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+      const likeLocator = await page
+        .locator('.blogShowAll')
+        .locator('p', { hasText: 'Likes: 1' })
+      await expect(likeLocator).toBeVisible()
+    })
   })
 })
