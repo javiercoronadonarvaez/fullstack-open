@@ -76,15 +76,16 @@ describe('Blog app', () => {
       await createBlog(page, 'Test', 'Matti Luukkainen', 'www.test.com')
       await page.getByRole('button', { name: 'view' }).click()
 
-      page.on('dialog', async (dialog) => {
+      page.once('dialog', async (dialog) => {
         expect(dialog.type()).toBe('confirm')
         expect(dialog.message()).toBe('Remove Test by Matti Luukkainen')
         await dialog.accept()
       })
 
       await page.getByRole('button', { name: 'delete' }).click()
+      await page.waitForTimeout(300)
 
-      const blog = await page.locator('.Blog')
+      const blog = await page.locator('.blogShowAll')
 
       expect(blog).not.toBeVisible()
     })
