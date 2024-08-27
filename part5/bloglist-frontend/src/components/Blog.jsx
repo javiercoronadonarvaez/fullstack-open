@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
-  console.log(blog)
-  console.log(user)
+  console.log('BLOG USER USERNAME', blog.user.username)
+  console.log('USER USERNAME', user.username)
   const [display, setDisplay] = useState(false)
   const [numLikes, setNumLikes] = useState(blog.likes)
 
@@ -31,6 +31,9 @@ const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
 
   const showAll = { display: display ? '' : 'none' }
   const showLimited = { display: display ? 'none' : '' }
+  const showDelteButton = {
+    display: blog.user.username === user.username ? '' : 'none',
+  }
 
   return (
     <div>
@@ -50,7 +53,9 @@ const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
           Likes: {numLikes} <button onClick={incrementLikeDisplay}>like</button>
         </p>
         <p>{blog.author}</p>
-        <button onClick={handleDelete}>delete</button>
+        <button style={showDelteButton} onClick={handleDelete}>
+          delete
+        </button>
       </div>
     </div>
   )

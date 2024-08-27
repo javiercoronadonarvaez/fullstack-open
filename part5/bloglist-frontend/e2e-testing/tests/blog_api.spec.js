@@ -11,6 +11,13 @@ describe('Blog app', () => {
         password: 'salainen',
       },
     })
+    await request.post('/api/users', {
+      data: {
+        name: 'Javier Coronado',
+        username: 'javiercoronarv',
+        password: 'cawamait',
+      },
+    })
     await page.goto('/')
   })
 
@@ -38,7 +45,7 @@ describe('Blog app', () => {
       await loginWith(page, 'mluukkai', 'salainen')
     })
 
-    test.only('a new blog can be created', async ({ page }) => {
+    test('a new blog can be created', async ({ page }) => {
       await page.getByRole('button', { name: 'New Note' }).click()
       await createBlog(page, 'Test', 'Matti Luukkainen', 'www.test.com')
       const newContent = 'Test Matti Luukkainen'
