@@ -53,7 +53,7 @@ describe('Blog app', () => {
       await expect(blogLocator).toHaveText(new RegExp(newContent))
     })
 
-    test.only('a blog can be liked', async ({ page }) => {
+    test('a blog can be liked', async ({ page }) => {
       await page.getByRole('button', { name: 'New Note' }).click()
       await createBlog(page, 'Test', 'Matti Luukkainen', 'www.test.com')
       await page.getByRole('button', { name: 'view' }).click()
@@ -62,6 +62,42 @@ describe('Blog app', () => {
         .locator('.blogShowAll')
         .locator('p', { hasText: 'Likes: 1' })
       await expect(likeLocator).toBeVisible()
+    })
+
+    test('ensure user who added the blog can delete the blog', async ({
+      page,
+    }) => {
+      await page.getByRole('button', { name: 'New Note' }).click()
+      await createBlog(page, 'Test', 'Matti Luukkainen', 'www.test.com')
+      await page.getByRole('button', { name: 'view' }).click()
+
+      page.on('dialog', async (dialog) => {
+        expect(dialog.type()).toBe('confirm')
+        expect(dialog.message()).toBe('Remove Test by Matti Luukkainen')
+        await dialog.accept()
+      })
+
+      await page.getByRole('button', { name: 'delete' }).click()
+
+      const blog = await page.locator('.Blog')
+
+      expect(blog).not.toBeVisible()
+    })
+
+    test('ensure user who added the blog sees the delete button', async ({
+      page,
+    }) => {
+      await page.getByRole('button', { name: 'New Note' }).click()
+      await createBlog(page, 'Test', 'Matti Luukkainen', 'www.test.com')
+      await page.getByRole('button', { name: 'view' }).click()
+      let deleteButton = await page.getByRole('button', { name: 'delete' })
+      expect(deleteButton).toBeVisible()
+
+      await page.getByRole('button', { name: 'logout' }).click()
+      await loginWith(page, 'javiercoronarv', 'cawamait')
+      await page.getByRole('button', { name: 'view' }).click()
+      deleteButton = await page.getByRole('button', { name: 'delete' })
+      expect(deleteButton).not.toBeVisible()
     })
   })
 })
