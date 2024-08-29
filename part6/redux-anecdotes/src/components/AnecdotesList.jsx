@@ -16,10 +16,11 @@ const Anecdote = ({ anecdote, vote }) => {
 
 const Anecdotes = () => {
   const anecdotes = useSelector((state) => state);
+  const descendingOrderAnecdotes = anecdotes.sort((a, b) => b.votes - a.votes);
   return (
     <>
       <h2>Anecdotes</h2>
-      {anecdotes.map((anecdote) => (
+      {descendingOrderAnecdotes.map((anecdote) => (
         <Anecdote key={anecdote.id} anecdote={anecdote} vote={vote} />
       ))}
     </>

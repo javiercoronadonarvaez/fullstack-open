@@ -56,7 +56,7 @@ export const vote = (id) => {
 export const createAnecdote = (content) => {
   return {
     type: "CREATE",
-    payload: { content, id: getId(), votes: 0 },
+    payload: { content: content, id: getId(), votes: 0 },
   };
 };
 
