@@ -25,7 +25,9 @@ const Anecdotes = () => {
       return anecdotes;
     }
   });
-  const descendingOrderAnecdotes = anecdotes.sort((a, b) => b.votes - a.votes);
+  const descendingOrderAnecdotes = [...anecdotes].sort(
+    (a, b) => b.votes - a.votes
+  );
   return (
     <>
       <h2>Anecdotes</h2>
