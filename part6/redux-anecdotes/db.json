@@ -34,6 +34,26 @@
       "id": "bbe2",
       "content": "test",
       "votes": 0
+    },
+    {
+      "id": "de3c",
+      "content": "new anecdote incoming",
+      "votes": 0
+    },
+    {
+      "id": "86ab",
+      "content": "new one",
+      "votes": 0
+    },
+    {
+      "id": "2285",
+      "content": "latest one",
+      "votes": 0
+    },
+    {
+      "id": "2ae5",
+      "content": "one more please",
+      "votes": 0
     }
   ]
 }
