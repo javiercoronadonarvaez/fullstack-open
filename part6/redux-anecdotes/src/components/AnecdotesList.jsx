@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
-import { vote } from "../reducers/anecdoteReducer";
+import { incrementLikeCount } from "../reducers/anecdoteReducer";
 import { displayNotification } from "../reducers/notificationReducer";
 
-const Anecdote = ({ anecdote, vote }) => {
+const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch();
   const handleClick = () => {
-    dispatch(vote(anecdote.id));
     dispatch(displayNotification(anecdote.content));
+    dispatch(incrementLikeCount(anecdote.id));
   };
 
   return (
@@ -38,7 +38,7 @@ const Anecdotes = () => {
     <>
       <h2>Anecdotes</h2>
       {descendingOrderAnecdotes.map((anecdote) => (
-        <Anecdote key={anecdote.id} anecdote={anecdote} vote={vote} />
+        <Anecdote key={anecdote.id} anecdote={anecdote} />
       ))}
     </>
   );
