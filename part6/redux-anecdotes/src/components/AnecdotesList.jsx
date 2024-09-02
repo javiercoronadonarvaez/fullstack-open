@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import { incrementLikeCount } from "../reducers/anecdoteReducer";
-import { displayNotification } from "../reducers/notificationReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
 const Anecdote = ({ anecdote }) => {
   const dispatch = useDispatch();
   const handleClick = () => {
-    dispatch(displayNotification(anecdote.content));
     dispatch(incrementLikeCount(anecdote.id));
+    dispatch(setNotification(anecdote.content, 5));
   };
 
   return (

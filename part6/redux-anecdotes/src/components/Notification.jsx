@@ -1,8 +1,6 @@
-import { useSelector, useDispatch } from "react-redux";
-import { removeNotification } from "../reducers/notificationReducer";
+import { useSelector } from "react-redux";
 
 const Notification = () => {
-  const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
   let style = {};
   if (notification) {
@@ -11,9 +9,6 @@ const Notification = () => {
       padding: 10,
       borderWidth: 1,
     };
-    setTimeout(() => {
-      dispatch(removeNotification());
-    }, 5000);
   } else {
     style = { display: "none" };
   }
