@@ -12,6 +12,8 @@ const App = () => {
         return `Anecdote "${action.payload}" voted`;
       case "REMOVE":
         return "";
+      case "ERROR":
+        return "Too short anecdote, must have length 5 or more";
       default:
         return state;
     }
@@ -65,8 +67,8 @@ const App = () => {
         value={[notification, notificationDispatch]}
       >
         <Notification />
+        <AnecdoteForm />
       </NotificationContext.Provider>
-      <AnecdoteForm />
 
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
