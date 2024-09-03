@@ -1,13 +1,24 @@
-const Notification = () => {
-  const style = {
-    display: "none",
-    border: "solid",
-    padding: 10,
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+import { useContext } from "react";
+import NotificationContext from "./NotificationContext";
 
-  return <div style={style}></div>;
+const Notification = () => {
+  const [notification, notificationDispatch] = useContext(NotificationContext);
+  let style = {};
+  if (notification) {
+    style = {
+      border: "solid",
+      padding: 10,
+      borderWidth: 1,
+      marginBottom: 5,
+    };
+    setTimeout(() => {
+      notificationDispatch({ type: "REMOVE" });
+    }, 5000);
+  } else {
+    style = { display: "none" };
+  }
+
+  return <div style={style}>{notification}</div>;
 };
 
 export default Notification;
