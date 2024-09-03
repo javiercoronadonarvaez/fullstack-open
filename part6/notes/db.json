@@ -7,13 +7,13 @@
     },
     {
       "content": "state changes are made with actions",
-      "important": false,
+      "important": true,
       "id": "2"
     },
     {
       "id": "3e09",
       "content": "test",
-      "important": false
+      "important": true
     },
     {
       "id": "c261",
@@ -24,6 +24,41 @@
       "id": "6e23",
       "content": "testing",
       "important": false
+    },
+    {
+      "id": "cba3",
+      "content": "testing ",
+      "important": true
+    },
+    {
+      "id": "4280",
+      "content": "new one",
+      "important": true
+    },
+    {
+      "id": "6e04",
+      "content": "tetstr",
+      "important": false
+    },
+    {
+      "id": "6732",
+      "content": "tetetetretet",
+      "important": false
+    },
+    {
+      "id": "3fe0",
+      "content": "test",
+      "important": true
+    },
+    {
+      "id": "d448",
+      "content": "new note",
+      "important": true
+    },
+    {
+      "id": "593d",
+      "content": "yvan eht nioj",
+      "important": true
     }
   ]
 }
