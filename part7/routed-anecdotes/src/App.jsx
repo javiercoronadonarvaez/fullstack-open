@@ -3,9 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   useMatch,
-  Navigate,
 } from "react-router-dom";
 import Menu from "./components/Menu";
 import { Anecdote } from "./components/AnecdoteList";
@@ -79,16 +77,7 @@ const App = () => {
           path="/anecdotes"
           element={<AnecdoteList anecdotes={anecdotes} />}
         />
-        <Route
-          path="/create"
-          element={
-            !createdAnecdote ? (
-              <CreateNew addNew={addNew} />
-            ) : (
-              <Navigate replace to="/" />
-            )
-          }
-        />
+        <Route path="/create" element={<CreateNew addNew={addNew} />} />
         <Route path="/about" element={<About />} />
       </Routes>
       <Footer />
