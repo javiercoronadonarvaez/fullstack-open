@@ -9,7 +9,7 @@ const Menu = () => {
       <Link style={padding} to="/anecdotes">
         anecdotes
       </Link>
-      <Link style={padding} to="/create-new">
+      <Link style={padding} to="/create">
         create new
       </Link>
       <Link style={padding} to="/about">

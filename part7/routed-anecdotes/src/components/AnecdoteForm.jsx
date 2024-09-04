@@ -43,7 +43,7 @@ const CreateNew = (props) => {
             onChange={(e) => setInfo(e.target.value)}
           />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
       </form>
     </div>
   );
