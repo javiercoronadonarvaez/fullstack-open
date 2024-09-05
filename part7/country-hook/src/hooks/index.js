@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCountry } from "../reducers/countryReducer";
 
 export const useField = (type) => {
   const [value, setValue] = useState("");
@@ -15,9 +17,18 @@ export const useField = (type) => {
 };
 
 export const useCountry = () => {
-  const [country, setCountry] = useState(null);
+  const dispatch = useDispatch();
+  const country = useSelector((state) => state.country);
+  const name = useSelector((state) => state.name);
+  console.log("Name Changed", name);
+
+  useEffect(() => {
+    if (name) {
+      dispatch(fetchCountry(name));
+    }
+  }, [name]);
 
   console.log("New Country", country);
 
-  return { country, setCountry };
+  return country;
 };

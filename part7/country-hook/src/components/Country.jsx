@@ -3,13 +3,13 @@ const Country = ({ country }) => {
   if (country) {
     return (
       <div>
-        <h3>{country.data.name.common} </h3>
-        <div>capital {country.data.capital} </div>
-        <div>population {country.data.population}</div>
+        <h3>{country.name.common} </h3>
+        <div>capital {country.capital} </div>
+        <div>population {country.population}</div>
         <img
-          src={country.data.flags.png}
+          src={country.flags.png}
           height="100"
-          alt={`flag of ${country.data.name}`}
+          alt={`flag of ${country.name}`}
         />
       </div>
     );

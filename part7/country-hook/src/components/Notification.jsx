@@ -1,7 +1,7 @@
-const Notification = ({ error }) => {
-  if (error) {
-    console.log(error);
-    return <p>{error.response.data.error}</p>;
+const Notification = ({ notification }) => {
+  if (notification) {
+    console.log(notification);
+    return <p>{notification.error}</p>;
   }
 };
 
