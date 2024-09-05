@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Country from "./components/Country";
 import Notification from "./components/Notification";
 import { useField, useCountry } from "./hooks";
 import countriesService from "./services/country";
+import { updateName } from "./reducers/nameReducer";
 
 const App = () => {
   const nameInput = useField("text");
-  const [name, setName] = useState("");
+  //const [name, setName] = useState("");
+  const dispatch = useDispatch();
+  const name = useSelector((state) => state.name);
   const [notification, setNotification] = useState("");
   const country = useCountry();
 
@@ -25,9 +29,10 @@ const App = () => {
     }
   }, [name]);
 
-  const fetch = (e) => {
-    e.preventDefault();
-    setName(nameInput.value);
+  const fetch = (event) => {
+    event.preventDefault();
+    // setName(nameInput.value);
+    dispatch(updateName(nameInput.value));
   };
 
   return (
