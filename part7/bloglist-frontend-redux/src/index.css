@@ -1,0 +1,42 @@
+.notification {
+  color: green;
+  background: lightgrey;
+  display: inline-block;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.error {
+  color: red;
+  background: lightgrey;
+  display: inline-block;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.blogShowLimited {
+  display: block;
+  font-size: 20px;
+  border-style: solid;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+.blogShowAll {
+  display: block;
+  font-size: 20px;
+  border-style: solid;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+button {
+  margin-left: 5px;
+  box-sizing: border-box;
+}
