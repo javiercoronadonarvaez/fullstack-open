@@ -11,4 +11,16 @@ const createNew = async (newAnecdote) => {
   return request.data;
 };
 
-export default { getAll, createNew };
+const putLiked = async (likedAnecdote) => {
+  const anecdoteUrl = `${baseUrl}/${likedAnecdote.id}`;
+  const request = await axios.put(anecdoteUrl, likedAnecdote);
+  return request.data;
+};
+
+const deleteAnecdote = async (deletedAnecdote) => {
+  const deletedAnecdoteUrl = `${baseUrl}/${deletedAnecdote.id}`;
+  const request = await axios.delete(deletedAnecdoteUrl);
+  return request.data;
+};
+
+export default { getAll, createNew, putLiked, deleteAnecdote };
