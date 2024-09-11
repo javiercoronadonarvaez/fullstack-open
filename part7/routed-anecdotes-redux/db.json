@@ -15,17 +15,24 @@
       "id": "2"
     },
     {
-      "id": "9f8f",
+      "id": "ca6f",
       "content": "test",
-      "author": "Javier Coronado",
+      "author": "JCN",
       "info": "www.test.com",
       "votes": 0
     },
     {
-      "id": "4239",
-      "content": "one more",
-      "author": "JCN",
-      "info": "www.jcn.com",
+      "id": "9e28",
+      "content": "testing",
+      "author": "Javier Coronado",
+      "info": "www.testing.com",
+      "votes": 0
+    },
+    {
+      "id": "eaac",
+      "content": "new anecdote",
+      "author": "David",
+      "info": "www.bible-belt.com",
       "votes": 0
     }
   ]

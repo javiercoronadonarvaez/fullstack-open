@@ -22,32 +22,6 @@ const App = () => {
     dispatch(initializeAnecdotes());
   }, []);
 
-  const [createdAnecdote, setCreatedAnecdote] = useState(null);
-
-  const handleNotification = (anecdote) => {
-    setCreatedAnecdote(anecdote);
-    setTimeout(() => setCreatedAnecdote(null), 5000);
-  };
-
-  const addNew = (anecdote) => {
-    anecdote.id = Math.round(Math.random() * 10000);
-    setAnecdotes(anecdotes.concat(anecdote));
-    handleNotification(anecdote);
-  };
-
-  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
-
-  const vote = (id) => {
-    const anecdote = anecdoteById(id);
-
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1,
-    };
-
-    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
-  };
-
   console.log("Anecdotes", anecdotes);
   const match = useMatch("/anecdotes/:id");
   const anecdote = match
@@ -58,7 +32,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      <Notification anecdote={createdAnecdote} />
+      <Notification />
       <Routes>
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route
@@ -69,7 +43,7 @@ const App = () => {
           path="/anecdotes"
           element={<AnecdoteList anecdotes={anecdotes} />}
         />
-        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route path="/create" element={<CreateNew />} />
         <Route path="/about" element={<About />} />
       </Routes>
       <Footer />

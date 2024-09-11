@@ -1,12 +1,20 @@
-const Notification = ({ anecdote }) => {
-  if (anecdote) {
-    console.log("Anecdote", anecdote);
-    return (
-      <div>
-        <p>A new anecdote: {anecdote.content} created!</p>
-      </div>
-    );
+import { useSelector, useDispatch } from "react-redux";
+import { deleteNotification } from "../reducers/notificationReducer";
+
+const Notification = () => {
+  const notification = useSelector((store) => store.notification);
+  const dispatch = useDispatch();
+  if (notification) {
+    setTimeout(() => {
+      dispatch(deleteNotification());
+    }, 5000);
   }
+
+  return (
+    <div>
+      <p>{notification}</p>
+    </div>
+  );
 };
 
 export default Notification;

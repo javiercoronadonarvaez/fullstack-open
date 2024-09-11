@@ -2,8 +2,9 @@ import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 import { useField } from "../hooks";
 import { useDispatch } from "react-redux";
 import { addNewAnecdote } from "../reducers/anecdoteReducer";
+import { newAnecdoteNotification } from "../reducers/notificationReducer";
 
-const CreateNew = (props) => {
+const CreateNew = () => {
   const dispatch = useDispatch();
 
   const content = useField("text");
@@ -21,6 +22,7 @@ const CreateNew = (props) => {
       votes: 0,
     };
     dispatch(addNewAnecdote(newAnecdote));
+    dispatch(newAnecdoteNotification(newAnecdote));
     navigate("/");
   };
 

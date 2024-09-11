@@ -1,5 +1,4 @@
-import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter as Router, Link, useMatch } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 export const Anecdote = ({ anecdote }) => {
   return (
