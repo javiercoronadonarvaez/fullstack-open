@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { initializeBlogs } from "./reducers/blogReducer";
-import Blog from "./components/Blog";
+import { keepUserLoggedIn } from "./reducers/userReducer";
 import LoginForm from "./components/LoginForm";
 import Error from "./components/Error";
 import Notification from "./components/Notification";
+import BlogList from "./components/BlogList";
 import BlogForm from "./components/BlogForm";
 import LoggedInUser from "./components/LoggedInUser";
 import Togglable from "./components/Togglable";
@@ -12,29 +13,24 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([]);
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [newBlog, setNewBlog] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // useEffect(() => {
-  //   blogService.getAll().then((blogs) => setBlogs(blogs));
-  // }, []);
   useEffect(() => {
     dispatch(initializeBlogs());
   }, []);
 
   const blogs = useSelector((store) => store.blogs);
+  const user = useSelector((store) => store.user);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      dispatch(keepUserLoggedIn(loggedUserJSON));
     }
   }, []);
 
@@ -60,24 +56,24 @@ const App = () => {
     );
   };
 
-  const blogDisplay = () => {
-    console.log("Blogs", blogs);
-    const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
-    return (
-      <div>
-        <h2>blogs</h2>
-        {sortedBlogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            user={user}
-            blog={blog}
-            incrementLikeCount={incrementLikeCount}
-            deleteBlogFromNotes={deleteBlogFromNotes}
-          />
-        ))}
-      </div>
-    );
-  };
+  // const blogDisplay = () => {
+  //   console.log("Blogs", blogs);
+  //   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
+  //   return (
+  //     <div>
+  //       <h2>blogs</h2>
+  //       {sortedBlogs.map((blog) => (
+  //         <Blog
+  //           key={blog.id}
+  //           user={user}
+  //           blog={blog}
+  //           incrementLikeCount={incrementLikeCount}
+  //           deleteBlogFromNotes={deleteBlogFromNotes}
+  //         />
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   const addBlog = async (newBlogObject) => {
     newBlogRef.current.toggleVisibility();
@@ -149,13 +145,15 @@ const App = () => {
     <div>
       <Error errorMessage={errorMessage} />
       {user === null ? (
-        loginForm()
+        // loginForm()
+        <LoginForm />
       ) : (
         <div>
           <LoggedInUser user={user} onLogoutClick={handleLogout} />
           <Notification newBlog={newBlog} />
           {blogForm()}
-          {blogDisplay()}
+          {/* {blogDisplay()} */}
+          <BlogList />
         </div>
       )}
     </div>
