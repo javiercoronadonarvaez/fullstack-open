@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getBlogs } from "./requests";
+import { useContext } from "react";
+import UserContext from "./components/UserContext";
 import LoginForm from "./components/LoginForm";
+import BlogList from "./components/BlogList";
 import Error from "./components/Error";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
@@ -10,21 +14,32 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  const queryClient = useQueryClient();
+
+  const result = useQuery({
+    queryKey: ["blogs"],
+    queryFn: getBlogs,
+    refetchOnWindowFocus: false,
+  });
+
+  console.log(JSON.parse(JSON.stringify(result)));
+
+  const blogs = result.data;
+
+  const [user, dispatch] = useContext(UserContext);
+
+  // const [user, setUser] = useState(null);
   const [newBlog, setNewBlog] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
 
-  useEffect(() => {
-    async function fetchBlogs() {
-      const fetchedBlogs = await blogService.getAll();
-      console.log("FETCHED ", fetchedBlogs);
-      setBlogs(fetchedBlogs);
-    }
-    fetchBlogs();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchBlogs() {
+  //     const fetchedBlogs = await blogService.getAll();
+  //     console.log("FETCHED ", fetchedBlogs);
+  //     setBlogs(fetchedBlogs);
+  //   }
+  //   fetchBlogs();
+  // }, []);
 
   console.log("Blogs", blogs);
 
@@ -32,64 +47,29 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch({ type: "LOGIN", payload: user });
       blogService.setToken(user.token);
     }
   }, []);
 
-  const loginForm = () => {
-    return (
-      <LoginForm
-        onLoginSubmit={handleLogin}
-        username={username}
-        onUsernameChange={handleUsernameChange}
-        password={password}
-        onPasswordChange={handlePasswordChange}
-      />
-    );
-  };
+  // const blogForm = () => {
+  //   return (
+  //     <Togglable buttonLabel="New Note" ref={newBlogRef}>
+  //       <BlogForm createNewBlog={addBlog} />
+  //     </Togglable>
+  //   );
+  // };
 
-  const newBlogRef = useRef();
-
-  const blogForm = () => {
-    return (
-      <Togglable buttonLabel="New Note" ref={newBlogRef}>
-        <BlogForm createNewBlog={addBlog} />
-      </Togglable>
-    );
-  };
-
-  const blogDisplay = () => {
-    if (blogs) {
-      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
-      console.log(sortedBlogs);
-      return (
-        <div>
-          <h2>blogs</h2>
-          {sortedBlogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              user={user}
-              blog={blog}
-              incrementLikeCount={incrementLikeCount}
-              deleteBlogFromNotes={deleteBlogFromNotes}
-            />
-          ))}
-        </div>
-      );
-    }
-  };
-
-  const addBlog = async (newBlogObject) => {
-    newBlogRef.current.toggleVisibility();
-    await blogService.create(newBlogObject).then((blog) => {
-      setBlogs(blogs.concat(blog)),
-        setNewBlog(blog),
-        setTimeout(() => {
-          setNewBlog({});
-        }, 4000);
-    });
-  };
+  // const addBlog = async (newBlogObject) => {
+  //   newBlogRef.current.toggleVisibility();
+  //   await blogService.create(newBlogObject).then((blog) => {
+  //     setBlogs(blogs.concat(blog)),
+  //       setNewBlog(blog),
+  //       setTimeout(() => {
+  //         setNewBlog({});
+  //       }, 4000);
+  //   });
+  // };
 
   const incrementLikeCount = async (newBlogObject) => {
     await blogService.incrementBlogLike(newBlogObject).then((blog) => {
@@ -150,13 +130,13 @@ const App = () => {
     <div>
       <Error errorMessage={errorMessage} />
       {user === null ? (
-        loginForm()
+        <LoginForm />
       ) : (
         <div>
           <LoggedInUser user={user} onLogoutClick={handleLogout} />
           <Notification newBlog={newBlog} />
-          {blogForm()}
-          {blogDisplay()}
+          {/* {blogForm()} */}
+          <BlogList blogs={blogs} user={user} />
         </div>
       )}
     </div>
