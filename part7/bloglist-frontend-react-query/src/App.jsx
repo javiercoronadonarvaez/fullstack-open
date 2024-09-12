@@ -2,7 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getBlogs } from "./requests";
 import { useContext } from "react";
+import { NotificationContextProvider } from "./components/NotificationContext";
+import { ErrorContextProvider } from "./components/ErrorContext";
 import UserContext from "./components/UserContext";
+import NotificationContext from "./components/NotificationContext";
+import ErrorContext from "./components/ErrorContext";
 import LoginForm from "./components/LoginForm";
 import BlogList from "./components/BlogList";
 import Error from "./components/Error";
@@ -117,17 +121,20 @@ const App = () => {
 
   return (
     <div>
-      <Error errorMessage={errorMessage} />
-      {user === null ? (
-        <LoginForm />
-      ) : (
-        <div>
-          <LoggedInUser user={user} onLogoutClick={handleLogout} />
-          <Notification newBlog={newBlog} />
-          {/* {blogForm()} */}
-          <BlogList blogs={blogs} user={user} />
-        </div>
-      )}
+      <ErrorContextProvider>
+        <Error />
+        {user === null ? (
+          <LoginForm />
+        ) : (
+          <div>
+            <LoggedInUser user={user} onLogoutClick={handleLogout} />
+            <Notification newBlog={newBlog} />
+            <NotificationContextProvider></NotificationContextProvider>
+            {/* {blogForm()} */}
+            <BlogList blogs={blogs} user={user} />
+          </div>
+        )}
+      </ErrorContextProvider>
     </div>
   );
 };

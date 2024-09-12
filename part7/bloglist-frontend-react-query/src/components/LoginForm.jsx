@@ -2,11 +2,13 @@ import { useField } from "../hooks";
 import { login } from "../requests";
 import { setToken } from "../requests";
 import { useUserDispatch } from "./UserContext";
+import { useErrorDispatch } from "./ErrorContext";
 
 const LoginForm = () => {
   const username = useField("text");
   const password = useField("password");
   const userDispatch = useUserDispatch();
+  const errorDispatch = useErrorDispatch();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -21,7 +23,10 @@ const LoginForm = () => {
       userDispatch({ type: "LOGIN", payload: user });
     } catch (exception) {
       console.log(exception);
-      //dispatch(updateLoginError(exception.response.data.error));
+      errorDispatch({
+        type: "UPDATE",
+        payload: exception.response.data.error,
+      });
       username.reset();
       password.reset();
     }
