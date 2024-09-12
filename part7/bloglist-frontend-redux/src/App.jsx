@@ -16,7 +16,6 @@ const App = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [user, setUser] = useState(null);
   const [newBlog, setNewBlog] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -34,18 +33,6 @@ const App = () => {
     }
   }, []);
 
-  const loginForm = () => {
-    return (
-      <LoginForm
-        onLoginSubmit={handleLogin}
-        username={username}
-        onUsernameChange={handleUsernameChange}
-        password={password}
-        onPasswordChange={handlePasswordChange}
-      />
-    );
-  };
-
   const newBlogRef = useRef();
 
   const blogForm = () => {
@@ -55,25 +42,6 @@ const App = () => {
       </Togglable>
     );
   };
-
-  // const blogDisplay = () => {
-  //   console.log("Blogs", blogs);
-  //   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
-  //   return (
-  //     <div>
-  //       <h2>blogs</h2>
-  //       {sortedBlogs.map((blog) => (
-  //         <Blog
-  //           key={blog.id}
-  //           user={user}
-  //           blog={blog}
-  //           incrementLikeCount={incrementLikeCount}
-  //           deleteBlogFromNotes={deleteBlogFromNotes}
-  //         />
-  //       ))}
-  //     </div>
-  //   );
-  // };
 
   const addBlog = async (newBlogObject) => {
     newBlogRef.current.toggleVisibility();
@@ -145,14 +113,12 @@ const App = () => {
     <div>
       <Error errorMessage={errorMessage} />
       {user === null ? (
-        // loginForm()
         <LoginForm />
       ) : (
         <div>
           <LoggedInUser user={user} onLogoutClick={handleLogout} />
           <Notification newBlog={newBlog} />
           {blogForm()}
-          {/* {blogDisplay()} */}
           <BlogList />
         </div>
       )}

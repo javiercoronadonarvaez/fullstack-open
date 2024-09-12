@@ -46,15 +46,16 @@ export const addNewBlog = (newBlog) => {
 export const updateLikedBlog = (likedBlog) => {
   return async (dispatch) => {
     const likedBackendBlog = await blogsService.incrementBlogLike(likedBlog);
+    console.log("Retrieved Liked Blog", likedBackendBlog);
     dispatch(likeBlog(likedBackendBlog));
   };
 };
 
 export const updateDeletedBlog = (deletedBlog) => {
   return async (dispatch) => {
-    const deletedBackendBlog = await blogsService.deleteBlog(deletedBlog);
-    console.log("Deleted Anecdote", deletedBackendAnecdote);
-    dispatch(deleteAnecdote(deletedBackendBlog));
+    const deletedBackendBlog = await blogsService.deleteBlog(deletedBlog.id);
+    console.log("Deleted Anecdote", deletedBackendBlog);
+    dispatch(deleteBlog(deletedBackendBlog));
   };
 };
 
