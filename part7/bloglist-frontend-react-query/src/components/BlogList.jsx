@@ -1,8 +1,10 @@
 import Blog from "./Blog";
+import { useUserValue } from "./UserContext";
 
-const BlogList = ({ blogs, user }) => {
+const BlogList = ({ blogs }) => {
   if (blogs) {
     const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes);
+    const user = useUserValue();
     return (
       <div>
         <h2>blogs</h2>

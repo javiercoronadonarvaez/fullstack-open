@@ -1,11 +1,25 @@
-const Notification = ({ newBlog }) => {
-  if (Object.keys(newBlog).length > 0) {
-    return (
-      <div className="notification">
-        A new Blog {newBlog.title} from {newBlog.author} added
-      </div>
-    )
-  }
-}
+import { useNotificationValue } from "./NotificationContext";
+import { useNotificationDispatch } from "./NotificationContext";
 
-export default Notification
+const Notification = () => {
+  const notification = useNotificationValue();
+  console.log("NOTIFICATION FORM", notification);
+  const notificationDispatch = useNotificationDispatch();
+  let style = {};
+  if (notification) {
+    style = { display: "" };
+    setTimeout(() => {
+      notificationDispatch({ type: "REMOVE" });
+    }, 5000);
+  } else {
+    style = { display: "none" };
+  }
+
+  return (
+    <div style={style} className="notification">
+      {notification}
+    </div>
+  );
+};
+
+export default Notification;

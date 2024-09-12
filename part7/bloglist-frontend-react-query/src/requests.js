@@ -11,27 +11,27 @@ export const setToken = (newToken) => {
 
 export const getBlogs = () => axios.get(baseUrl).then((res) => res.data);
 
-export const createBlog = (newBlog) => {
+export const createBlog = async (newBlog) => {
   const config = {
     headers: { Authorization: token },
   };
-  axios.post(baseUrl, newBlog, config).then((res) => res.data);
+  return await axios.post(baseUrl, newBlog, config).then((res) => res.data);
 };
 
-export const updateBlog = (updatedBlog) => {
+export const updateBlog = async (updatedBlog) => {
   const config = {
     headers: { Authorization: token },
   };
-  axios
+  return await axios
     .put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, config)
     .then((res) => res.data);
 };
 
-export const deleteBlog = (deletedBlog) => {
+export const deleteBlog = async (deletedBlog) => {
   const config = {
     headers: { Authorization: token },
   };
-  axios
+  return await axios
     .put(`${baseUrl}/${deletedBlog.id}`, deletedBlog, config)
     .then((res) => res.data);
 };
