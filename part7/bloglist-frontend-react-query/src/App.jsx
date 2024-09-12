@@ -27,19 +27,8 @@ const App = () => {
   const blogs = result.data;
 
   const [user, dispatch] = useContext(UserContext);
-
-  // const [user, setUser] = useState(null);
   const [newBlog, setNewBlog] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
-
-  // useEffect(() => {
-  //   async function fetchBlogs() {
-  //     const fetchedBlogs = await blogService.getAll();
-  //     console.log("FETCHED ", fetchedBlogs);
-  //     setBlogs(fetchedBlogs);
-  //   }
-  //   fetchBlogs();
-  // }, []);
 
   console.log("Blogs", blogs);
 
