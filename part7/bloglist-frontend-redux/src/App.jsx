@@ -8,7 +8,6 @@ import Notification from "./components/Notification";
 import BlogList from "./components/BlogList";
 import BlogForm from "./components/BlogForm";
 import LoggedInUser from "./components/LoggedInUser";
-import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -23,7 +22,6 @@ const App = () => {
     dispatch(initializeBlogs());
   }, []);
 
-  const blogs = useSelector((store) => store.blogs);
   const user = useSelector((store) => store.user);
 
   useEffect(() => {
@@ -32,23 +30,6 @@ const App = () => {
       dispatch(keepUserLoggedIn(loggedUserJSON));
     }
   }, []);
-
-  const newBlogRef = useRef();
-
-  const blogForm = () => {
-    return <BlogForm createNewBlog={addBlog} />;
-  };
-
-  const addBlog = async (newBlogObject) => {
-    newBlogRef.current.toggleVisibility();
-    await blogService.create(newBlogObject).then((blog) => {
-      setBlogs(blogs.concat(blog)),
-        setNewBlog(blog),
-        setTimeout(() => {
-          setNewBlog({});
-        }, 4000);
-    });
-  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -70,21 +51,15 @@ const App = () => {
     }
   };
 
-  const handleLogout = (event) => {
-    event.preventDefault();
-    window.localStorage.removeItem("loggedNoteappUser");
-    setUser(null);
-  };
-
   return (
     <div>
-      <Error errorMessage={errorMessage} />
+      <Error />
       {user === null ? (
         <LoginForm />
       ) : (
         <div>
-          <LoggedInUser user={user} onLogoutClick={handleLogout} />
-          <Notification newBlog={newBlog} />
+          <LoggedInUser />
+          <Notification />
           <BlogForm />
           <BlogList />
         </div>

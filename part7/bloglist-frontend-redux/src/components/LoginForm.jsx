@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useField } from "../hooks";
 import { logIn } from "../reducers/userReducer";
+import { updateLoginError } from "../reducers/errorReducer";
 import loginService from "../services/login";
 import blogsService from "../services/blogs";
 
@@ -11,14 +12,21 @@ const LoginForm = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const user = await loginService.login({
-      username: username.input.value,
-      password: password.input.value,
-    });
-    window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
-    console.log("User", user);
-    blogsService.setToken(user.token);
-    dispatch(logIn(user));
+    try {
+      const user = await loginService.login({
+        username: username.input.value,
+        password: password.input.value,
+      });
+      window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
+      console.log("User", user);
+      blogsService.setToken(user.token);
+      dispatch(logIn(user));
+    } catch (exception) {
+      console.log(exception.response.data);
+      dispatch(updateLoginError(exception.response.data.error));
+      username.reset();
+      password.reset();
+    }
   };
 
   return (
