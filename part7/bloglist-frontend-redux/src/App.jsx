@@ -36,11 +36,7 @@ const App = () => {
   const newBlogRef = useRef();
 
   const blogForm = () => {
-    return (
-      <Togglable buttonLabel="New Note" ref={newBlogRef}>
-        <BlogForm createNewBlog={addBlog} />
-      </Togglable>
-    );
+    return <BlogForm createNewBlog={addBlog} />;
   };
 
   const addBlog = async (newBlogObject) => {
@@ -52,35 +48,6 @@ const App = () => {
           setNewBlog({});
         }, 4000);
     });
-  };
-
-  const incrementLikeCount = async (newBlogObject) => {
-    await blogService.incrementBlogLike(newBlogObject).then((blog) => {
-      console.log("Updated Blog: ", blog),
-        setBlogs(
-          blogs.map((currentBlog) =>
-            currentBlog.id === blog.id ? blog : currentBlog
-          )
-        );
-    });
-  };
-
-  const deleteBlogFromNotes = async (blogId) => {
-    //const blogsWithoutDeletedBlog = blogs.filter((blog) => blog.id !== blogId)
-    //setBlogs(blogsWithoutDeletedBlog)
-    await blogService
-      .deleteBlog(blogId)
-      .then((deletedBlog) =>
-        setBlogs(blogs.filter((blog) => blog.id !== deletedBlog.id))
-      );
-  };
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
   };
 
   const handleLogin = async (event) => {
@@ -118,7 +85,7 @@ const App = () => {
         <div>
           <LoggedInUser user={user} onLogoutClick={handleLogout} />
           <Notification newBlog={newBlog} />
-          {blogForm()}
+          <BlogForm />
           <BlogList />
         </div>
       )}

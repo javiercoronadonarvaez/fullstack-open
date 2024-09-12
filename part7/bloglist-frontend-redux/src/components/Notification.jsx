@@ -1,11 +1,24 @@
-const Notification = ({ newBlog }) => {
-  if (Object.keys(newBlog).length > 0) {
-    return (
-      <div className="notification">
-        A new Blog {newBlog.title} from {newBlog.author} added
-      </div>
-    )
-  }
-}
+import { useSelector, useDispatch } from "react-redux";
+import { removeNotification } from "../reducers/notificationReducer";
 
-export default Notification
+const Notification = () => {
+  const dispatch = useDispatch();
+  const notification = useSelector((store) => store.notification);
+  let display = {};
+  if (!notification) {
+    display = { display: "none" };
+  } else {
+    display = { display: "" };
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, 5000);
+  }
+
+  return (
+    <div style={display} className="notification">
+      {notification}
+    </div>
+  );
+};
+
+export default Notification;

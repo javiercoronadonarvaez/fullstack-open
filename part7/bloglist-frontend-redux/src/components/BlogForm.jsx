@@ -1,74 +1,49 @@
-import { useState } from 'react'
+import { useDispatch } from "react-redux";
+import { useField } from "../hooks";
+import { addNewBlog } from "../reducers/blogReducer";
+import { newBlogNotification } from "../reducers/notificationReducer";
+import Togglable from "../components/Togglable";
 
-const BlogForm = ({ createNewBlog }) => {
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+const BlogForm = () => {
+  const dispatch = useDispatch();
+  const title = useField("text");
+  const author = useField("text");
+  const url = useField("text");
 
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
-  }
-
-  const addNewBlog = (event) => {
-    event.preventDefault()
+  const createBlog = (event) => {
+    event.preventDefault();
     const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-    }
-    createNewBlog(newBlog)
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
-  }
+      title: title.input.value,
+      author: author.input.value,
+      url: url.input.value,
+    };
+    dispatch(addNewBlog(newBlog));
+    dispatch(newBlogNotification(newBlog));
+    title.reset();
+    author.reset();
+    url.reset();
+  };
 
   return (
-    <form onSubmit={addNewBlog}>
-      <h2>Create New</h2>
-      <div>
-        Title:
-        <input
-          data-testid="title"
-          type="text"
-          name="Title"
-          value={newTitle}
-          onChange={handleTitleChange}
-          placeholder="Title Input"
-        />
-      </div>
-      <div>
-        Author:
-        <input
-          data-testid="author"
-          type="text"
-          name="Author"
-          value={newAuthor}
-          onChange={handleAuthorChange}
-          placeholder="Author Input"
-        />
-      </div>
-      <div>
-        Url:
-        <input
-          data-testid="url"
-          type="text"
-          name="Url"
-          value={newUrl}
-          onChange={handleUrlChange}
-          placeholder="URL Input"
-        />
-      </div>
-      <button type="submit">create</button>
-    </form>
-  )
-}
+    <Togglable buttonLabel="New Note">
+      <form onSubmit={createBlog}>
+        <h2>Create New</h2>
+        <div>
+          Title:
+          <input {...title.input} />
+        </div>
+        <div>
+          Author:
+          <input {...author.input} />
+        </div>
+        <div>
+          Url:
+          <input {...url.input} />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </Togglable>
+  );
+};
 
-export default BlogForm
+export default BlogForm;
