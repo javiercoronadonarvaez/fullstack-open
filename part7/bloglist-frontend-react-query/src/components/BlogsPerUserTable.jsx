@@ -1,28 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUsers } from "../requests";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
-const BlogsPerUserTable = () => {
-  const result = useQuery({
-    queryKey: ["users"],
-    queryFn: getUsers,
-  });
-
-  if (result.isLoading) {
-    return <div>loading data...</div>;
-  }
-
-  const users = result.data;
-
-  console.log("Users", users);
-
-  const data = [
-    { id: 1, name: "Alice", age: 25 },
-    { id: 2, name: "Bob", age: 30 },
-    { id: 3, name: "Charlie", age: 35 },
-  ];
-
+const BlogsPerUserTable = ({ users }) => {
   return (
-    <>
+    <div>
       <h2>Users</h2>
       <table border="1">
         <thead>
@@ -34,13 +14,15 @@ const BlogsPerUserTable = () => {
         <tbody>
           {users.map((user, index) => (
             <tr key={index}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
               <td style={{ textAlign: "center" }}>{user.blogs.length}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 
