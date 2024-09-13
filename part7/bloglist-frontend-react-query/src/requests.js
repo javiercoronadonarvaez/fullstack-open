@@ -2,6 +2,7 @@ import axios from "axios";
 
 const baseUrl = "/api/blogs";
 const loginUrl = "/api/login";
+const usersUrl = "/api/users";
 
 let token = null;
 
@@ -11,6 +12,11 @@ export const setToken = (newToken) => {
 
 export const getBlogs = async () => {
   const request = await axios.get(baseUrl);
+  return request.data;
+};
+
+export const getUsers = async () => {
+  const request = await axios.get(usersUrl);
   return request.data;
 };
 

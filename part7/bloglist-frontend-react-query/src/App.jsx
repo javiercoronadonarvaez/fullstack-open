@@ -12,6 +12,7 @@ import Error from "./components/Error";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
 import LoggedInUser from "./components/LoggedInUser";
+import BlogsPerUserTable from "./components/BlogsPerUserTable";
 
 const App = () => {
   const result = useQuery({
@@ -53,6 +54,7 @@ const App = () => {
               <BlogForm />
             </NotificationContextProvider>
             <BlogList blogs={blogs} />
+            <BlogsPerUserTable />
           </div>
         )}
       </ErrorContextProvider>
