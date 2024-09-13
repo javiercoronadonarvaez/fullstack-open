@@ -16,7 +16,6 @@ const BlogForm = () => {
     onSuccess: (newBlog) => {
       console.log("NEW BLOG", newBlog);
       const blogs = queryClient.getQueryData(["blogs"]);
-      console.log("FETCHED BLOG", blogs);
       queryClient.setQueryData(["blogs"], blogs.concat(newBlog));
       const notification = `A new Blog ${newBlog.title} from ${newBlog.author} added`;
       console.log("NOTIFICATION", notification);

@@ -9,33 +9,40 @@ export const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
-export const getBlogs = async () =>
-  await axios.get(baseUrl).then((res) => res.data);
+export const getBlogs = async () => {
+  const request = await axios.get(baseUrl);
+  return request.data;
+};
 
 export const createBlog = async (newBlog) => {
   const config = {
     headers: { Authorization: token },
   };
-  return await axios.post(baseUrl, newBlog, config).then((res) => res.data);
+  const request = await axios.post(baseUrl, newBlog, config);
+  return request.data;
 };
 
 export const updateBlog = async (updatedBlog) => {
   const config = {
     headers: { Authorization: token },
   };
-  return await axios
-    .put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, config)
-    .then((res) => res.data);
+  const request = await axios.put(
+    `${baseUrl}/${updatedBlog.id}`,
+    updatedBlog,
+    config
+  );
+  return request.data;
 };
 
 export const deleteBlog = async (deletedBlog) => {
   const config = {
     headers: { Authorization: token },
   };
-  return await axios
-    .put(`${baseUrl}/${deletedBlog.id}`, deletedBlog, config)
-    .then((res) => res.data);
+  const request = await axios.delete(`${baseUrl}/${deletedBlog.id}`, config);
+  return request.data;
 };
 
-export const login = (credentials) =>
-  axios.post(loginUrl, credentials).then((res) => res.data);
+export const login = async (credentials) => {
+  const request = await axios.post(loginUrl, credentials);
+  return request.data;
+};

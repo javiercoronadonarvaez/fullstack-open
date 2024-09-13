@@ -29,10 +29,19 @@ const Blog = ({ blog }) => {
     incrementBlogLikeMutation.mutate(updatedBlog);
   };
 
+  const deleteBlogMutation = useMutation({
+    mutationFn: deleteBlog,
+    onSuccess: (deletedBlog) => {
+      const blogs = queryClient.getQueryData(["blogs"]);
+      const updatedBlogs = blogs.filter((blog) => blog.id !== deletedBlog.id);
+      queryClient.setQueryData(["blogs"], updatedBlogs);
+    },
+  });
+
   const handleDelete = () => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       {
-        console.log("Deleted Post"), deleteBlogFromNotes(blog.id);
+        deleteBlogMutation.mutate(blog);
       }
     }
   };
@@ -62,7 +71,9 @@ const Blog = ({ blog }) => {
           <button onClick={incrementBlogLike}>like</button>
         </p>
         <p>{blog.author}</p>
-        <button style={showDeleteButton}>delete</button>
+        <button style={showDeleteButton} onClick={handleDelete}>
+          delete
+        </button>
       </div>
     </div>
   );
