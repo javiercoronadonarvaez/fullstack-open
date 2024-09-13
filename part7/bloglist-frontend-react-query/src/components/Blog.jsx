@@ -1,37 +1,47 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { useUserValue } from "./UserContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateBlog, deleteBlog } from "../requests";
 
-const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
-  const [display, setDisplay] = useState(false)
-  const [numLikes, setNumLikes] = useState(blog.likes)
-
+const Blog = ({ blog }) => {
+  const user = useUserValue();
+  const [display, setDisplay] = useState(false);
   const handleDisplayButton = () => {
-    setDisplay(!display)
-  }
+    setDisplay(!display);
+  };
 
-  const incrementLikeDisplay = () => {
-    const increasedNumLikes = numLikes + 1
-    setNumLikes(increasedNumLikes)
-    const newBlogObject = {
+  const queryClient = useQueryClient();
+  const incrementBlogLikeMutation = useMutation({
+    mutationFn: updateBlog,
+    onSuccess: (updatedBlog) => {
+      const blogs = queryClient.getQueryData(["blogs"]);
+      const updatedBlogs = blogs.map((blog) =>
+        blog.id === updatedBlog.id ? updatedBlog : blog
+      );
+      queryClient.setQueryData(["blogs"], updatedBlogs);
+    },
+  });
+  const incrementBlogLike = () => {
+    const updatedBlog = {
       ...blog,
-      likes: increasedNumLikes,
-    }
-    console.log('New Blog Object: ', newBlogObject)
-    incrementLikeCount(newBlogObject)
-  }
+      likes: blog.likes + 1,
+    };
+    incrementBlogLikeMutation.mutate(updatedBlog);
+  };
 
   const handleDelete = () => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       {
-        console.log('Deleted Post'), deleteBlogFromNotes(blog.id)
+        console.log("Deleted Post"), deleteBlogFromNotes(blog.id);
       }
     }
-  }
+  };
 
-  const showAll = { display: display ? '' : 'none' }
-  const showLimited = { display: display ? 'none' : '' }
-  const showDelteButton = {
-    display: blog.user.id === user.id ? '' : 'none',
-  }
+  const showAll = { display: display ? "" : "none" };
+  const showLimited = { display: display ? "none" : "" };
+  const showDeleteButton = {
+    display: blog.user.id === user.id ? "" : "none",
+  };
 
   return (
     <div className="Blog">
@@ -48,15 +58,14 @@ const Blog = ({ user, blog, incrementLikeCount, deleteBlogFromNotes }) => {
         </p>
         <p>{blog.url}</p>
         <p className="numLikes">
-          Likes: {numLikes} <button onClick={incrementLikeDisplay}>like</button>
+          Likes: {blog.likes}
+          <button onClick={incrementBlogLike}>like</button>
         </p>
         <p>{blog.author}</p>
-        <button style={showDelteButton} onClick={handleDelete}>
-          delete
-        </button>
+        <button style={showDeleteButton}>delete</button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;

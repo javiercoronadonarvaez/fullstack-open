@@ -9,7 +9,8 @@ export const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
-export const getBlogs = () => axios.get(baseUrl).then((res) => res.data);
+export const getBlogs = async () =>
+  await axios.get(baseUrl).then((res) => res.data);
 
 export const createBlog = async (newBlog) => {
   const config = {
