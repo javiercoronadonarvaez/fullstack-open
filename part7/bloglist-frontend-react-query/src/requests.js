@@ -46,6 +46,15 @@ export const updateBlog = async (updatedBlog) => {
   return request.data;
 };
 
+export const postBlogComment = async (updatedBlog) => {
+  console.log("ACCESSING POST COMMENT");
+  const request = await axios.post(
+    `${baseUrl}/${updatedBlog.id}/comments`,
+    updatedBlog
+  );
+  return request.data;
+};
+
 export const deleteBlog = async (deletedBlog) => {
   const config = {
     headers: { Authorization: token },

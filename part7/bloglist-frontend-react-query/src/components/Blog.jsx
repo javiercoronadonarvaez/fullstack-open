@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useField } from "../hooks";
 import { useUserValue } from "./UserContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateBlog, deleteBlog } from "../requests";
+import { updateBlog, deleteBlog, postBlogComment } from "../requests";
 import { BrowserRouter as Router, Link, useMatch } from "react-router-dom";
 
 const Blog = ({ blogs }) => {
@@ -25,6 +26,7 @@ const Blog = ({ blogs }) => {
       queryClient.setQueryData(["blogs"], updatedBlogs);
     },
   });
+
   const incrementBlogLike = () => {
     const updatedBlog = {
       ...blog,
@@ -48,6 +50,32 @@ const Blog = ({ blogs }) => {
         deleteBlogMutation.mutate(blog);
       }
     }
+  };
+
+  const comment = useField("text");
+
+  const postCommentMutation = useMutation({
+    mutationFn: postBlogComment,
+    onSuccess: (updatedBlog) => {
+      console.log(updatedBlog);
+      const blogs = queryClient.getQueryData(["blogs"]);
+      const updatedBlogs = blogs.map((blog) =>
+        blog.id === updatedBlog.id ? updatedBlog : blog
+      );
+      queryClient.setQueryData(["blogs"], updatedBlogs);
+    },
+  });
+
+  const handleCommentPosting = (event) => {
+    console.log(comment.input.value);
+    event.preventDefault();
+    const updatedBlog = {
+      ...blog,
+      comments: blog.comments.concat(comment.input.value),
+    };
+    console.log("Updated Blog", updatedBlog);
+    postCommentMutation.mutate(updatedBlog);
+    comment.reset();
   };
 
   const showAll = { display: display ? "" : "none" };
@@ -75,6 +103,14 @@ const Blog = ({ blogs }) => {
           <button onClick={incrementBlogLike}>like</button>
         </p>
         <p>Added by {blog.author}</p>
+        <h2>Comments</h2>
+        <form onSubmit={handleCommentPosting}>
+          <input {...comment.input} />
+          <button type="submit">add comment</button>
+        </form>
+        {blog.comments.map((comment, index) => (
+          <li key={index + 1}>{comment}</li>
+        ))}
         <button style={showDeleteButton} onClick={handleDelete}>
           delete
         </button>

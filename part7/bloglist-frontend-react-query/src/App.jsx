@@ -77,6 +77,7 @@ const App = () => {
           {user ? (
             <>
               <Route path="/" element={loggedInUserStarter()} />
+              <Route path="/blogs" element={loggedInUserStarter()} />
               <Route
                 path="/users"
                 element={<BlogsPerUserTable users={users} />}

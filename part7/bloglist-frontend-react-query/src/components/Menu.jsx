@@ -6,7 +6,7 @@ const Menu = ({ user }) => {
     return (
       <div>
         <Link to="/blogs" className="menu">
-          notes
+          blogs
         </Link>
         <Link to="/users" className="menu">
           users
