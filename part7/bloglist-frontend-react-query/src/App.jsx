@@ -60,35 +60,27 @@ const App = () => {
     );
   };
 
-  const loggedOutUserStarter = () => {
-    return (
-      <div>
-        <LoginForm />
-      </div>
-    );
-  };
-
   return (
     <div>
       <ErrorContextProvider>
-        <Menu user={user} />
         <Error />
+        <Menu user={user} />
         <Routes>
           {user ? (
             <>
               <Route path="/" element={loggedInUserStarter()} />
               <Route path="/blogs" element={loggedInUserStarter()} />
+              <Route path="/blogs/:id" element={<Blog blogs={blogs} />} />
               <Route
                 path="/users"
                 element={<BlogsPerUserTable users={users} />}
               />
               <Route path="/users/:id" element={<User users={users} />} />
-              <Route path="/blogs/:id" element={<Blog blogs={blogs} />} />
             </>
           ) : (
             <>
-              <Route path="/" element={loggedOutUserStarter()} />
-              <Route path="/login" element={loggedOutUserStarter()} />
+              <Route path="/" element={<LoginForm />} />
+              <Route path="/login" element={<LoginForm />} />
             </>
           )}
         </Routes>
