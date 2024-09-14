@@ -1,14 +1,15 @@
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import { Table } from "react-bootstrap";
 
 const BlogsPerUserTable = ({ users }) => {
   return (
     <div>
       <h2>Users</h2>
-      <table border="1">
+      <Table striped>
         <thead>
           <tr>
             <th>User</th>
-            <th>Blogs Created</th>
+            <th style={{ textAlign: "center" }}>Blogs Created</th>
           </tr>
         </thead>
         <tbody>
@@ -21,7 +22,7 @@ const BlogsPerUserTable = ({ users }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };

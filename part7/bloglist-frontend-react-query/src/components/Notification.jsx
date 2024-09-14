@@ -1,5 +1,6 @@
 import { useNotificationValue } from "./NotificationContext";
 import { useNotificationDispatch } from "./NotificationContext";
+import { Alert } from "@mui/material";
 
 const Notification = () => {
   const notification = useNotificationValue();
@@ -16,9 +17,9 @@ const Notification = () => {
   }
 
   return (
-    <div style={style} className="notification">
+    <Alert severity="success" style={style} className="notification">
       {notification}
-    </div>
+    </Alert>
   );
 };
 

@@ -24,6 +24,7 @@
   display: block;
   font-size: 20px;
   border-style: solid;
+  margin-top: 5px;
   margin-bottom: 5px;
   box-sizing: border-box;
 }
@@ -32,6 +33,7 @@
   display: block;
   font-size: 20px;
   border-style: solid;
+  margin-top: 5px;
   margin-bottom: 5px;
   box-sizing: border-box;
 }
@@ -40,6 +42,16 @@
   display: block;
   font-size: 20px;
   border-style: solid;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+.input {
+  display: block;
+  font-size: 15px;
+  border-style: solid;
+  margin-top: 5px;
   margin-bottom: 5px;
   box-sizing: border-box;
 }
@@ -49,6 +61,13 @@
 }
 
 button {
+  font-size: small;
   margin-left: 5px;
+  box-sizing: border-box;
+}
+
+li {
+  font-size: large;
+  margin-left: 10px;
   box-sizing: border-box;
 }

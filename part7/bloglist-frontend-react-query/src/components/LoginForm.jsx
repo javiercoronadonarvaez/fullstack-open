@@ -4,6 +4,7 @@ import { setToken } from "../requests";
 import { useUserDispatch } from "./UserContext";
 import { useErrorDispatch } from "./ErrorContext";
 import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -38,17 +39,19 @@ const LoginForm = () => {
   return (
     <div>
       <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input {...username.input} />
-        </div>
-        <div>
-          password
-          <input {...password.input} />
-        </div>
-        <button type="submit">login</button>
-      </form>
+      <Form onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>username</Form.Label>
+          <Form.Control className="input" {...username.input} />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>password</Form.Label>
+          <Form.Control className="input" {...password.input} />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          login
+        </Button>
+      </Form>
     </div>
   );
 };

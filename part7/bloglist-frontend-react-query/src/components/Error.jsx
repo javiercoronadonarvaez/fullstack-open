@@ -1,5 +1,6 @@
 import { useErrorValue } from "./ErrorContext";
 import { useErrorDispatch } from "./ErrorContext";
+import { Alert } from "@mui/material";
 
 const Error = () => {
   const error = useErrorValue();
@@ -15,9 +16,9 @@ const Error = () => {
   }
 
   return (
-    <div style={style} className="error">
+    <Alert severity="error" style={style} className="error">
       {error}
-    </div>
+    </Alert>
   );
 };
 

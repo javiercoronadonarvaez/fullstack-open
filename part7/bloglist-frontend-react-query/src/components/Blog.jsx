@@ -3,11 +3,17 @@ import { useField } from "../hooks";
 import { useUserValue } from "./UserContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateBlog, deleteBlog, postBlogComment } from "../requests";
-import { BrowserRouter as Router, Link, useMatch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Link,
+  useMatch,
+  useNavigate,
+} from "react-router-dom";
 
 const Blog = ({ blogs }) => {
   const match = useMatch("/blogs/:id");
   const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null;
+  const navigate = useNavigate();
 
   const user = useUserValue();
   const [display, setDisplay] = useState(false);
@@ -47,6 +53,7 @@ const Blog = ({ blogs }) => {
   const handleDelete = () => {
     if (window.confirm(`Remove ${blog.title} by ${blog.author}`)) {
       {
+        navigate("/");
         deleteBlogMutation.mutate(blog);
       }
     }

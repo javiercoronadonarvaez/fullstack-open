@@ -61,7 +61,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <ErrorContextProvider>
         <Error />
         <Menu user={user} />
@@ -80,6 +80,8 @@ const App = () => {
           ) : (
             <>
               <Route path="/" element={<LoginForm />} />
+              <Route path="/blogs" element={<LoginForm />} />
+              <Route path="/users" element={<LoginForm />} />
               <Route path="/login" element={<LoginForm />} />
             </>
           )}
