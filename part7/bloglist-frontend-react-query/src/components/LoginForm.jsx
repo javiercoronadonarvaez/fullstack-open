@@ -3,8 +3,10 @@ import { login } from "../requests";
 import { setToken } from "../requests";
 import { useUserDispatch } from "./UserContext";
 import { useErrorDispatch } from "./ErrorContext";
+import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const username = useField("text");
   const password = useField("password");
   const userDispatch = useUserDispatch();
@@ -12,6 +14,7 @@ const LoginForm = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    navigate("/");
     try {
       const user = await login({
         username: username.input.value,

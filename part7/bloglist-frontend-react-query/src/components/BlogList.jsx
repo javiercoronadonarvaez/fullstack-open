@@ -1,4 +1,4 @@
-import Blog from "./Blog";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 const BlogList = ({ blogs }) => {
   if (blogs) {
@@ -7,7 +7,11 @@ const BlogList = ({ blogs }) => {
       <div>
         <h2>blogs</h2>
         {sortedBlogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <div className="blogLink" key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>
+              {blog.title} {blog.author}
+            </Link>
+          </div>
         ))}
       </div>
     );

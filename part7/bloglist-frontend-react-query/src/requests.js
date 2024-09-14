@@ -20,6 +20,12 @@ export const getUsers = async () => {
   return request.data;
 };
 
+export const getUser = async (user) => {
+  const userUrl = `${usersUrl}/${user.id}`;
+  const request = await axios.get(userUrl);
+  return request.data;
+};
+
 export const createBlog = async (newBlog) => {
   const config = {
     headers: { Authorization: token },

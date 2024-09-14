@@ -36,6 +36,18 @@
   box-sizing: border-box;
 }
 
+.blogLink {
+  display: block;
+  font-size: 20px;
+  border-style: solid;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+.menu {
+  margin-right: 5px;
+}
+
 button {
   margin-left: 5px;
   box-sizing: border-box;

@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useUserValue } from "./UserContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateBlog, deleteBlog } from "../requests";
+import { BrowserRouter as Router, Link, useMatch } from "react-router-dom";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blogs }) => {
+  const match = useMatch("/blogs/:id");
+  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null;
+
   const user = useUserValue();
   const [display, setDisplay] = useState(false);
   const handleDisplayButton = () => {
@@ -61,16 +65,16 @@ const Blog = ({ blog }) => {
         </p>
       </div>
       <div style={showAll} className="blogShowAll">
-        <p>
+        <h2>
           {blog.title} {blog.author}
           <button onClick={handleDisplayButton}>hide</button>
-        </p>
-        <p>{blog.url}</p>
+        </h2>
+        <Link>{blog.url}</Link>
         <p className="numLikes">
-          Likes: {blog.likes}
+          {blog.likes} Likes
           <button onClick={incrementBlogLike}>like</button>
         </p>
-        <p>{blog.author}</p>
+        <p>Added by {blog.author}</p>
         <button style={showDeleteButton} onClick={handleDelete}>
           delete
         </button>

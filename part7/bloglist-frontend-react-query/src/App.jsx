@@ -13,9 +13,10 @@ import BlogList from "./components/BlogList";
 import Error from "./components/Error";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
-import LoggedInUser from "./components/LoggedInUser";
 import BlogsPerUserTable from "./components/BlogsPerUserTable";
+import Menu from "./components/Menu";
 import User from "./components/User";
+import Blog from "./components/Blog";
 
 const App = () => {
   const blogsResult = useQuery({
@@ -47,35 +48,50 @@ const App = () => {
   const users = usersResult.data;
   console.log("Blogs", blogs);
 
+  const loggedInUserStarter = () => {
+    return (
+      <div>
+        <NotificationContextProvider>
+          <Notification />
+          <BlogForm />
+        </NotificationContextProvider>
+        <BlogList blogs={blogs} />
+      </div>
+    );
+  };
+
+  const loggedOutUserStarter = () => {
+    return (
+      <div>
+        <LoginForm />
+      </div>
+    );
+  };
+
   return (
     <div>
       <ErrorContextProvider>
+        <Menu user={user} />
         <Error />
-        {user === null ? (
-          <LoginForm />
-        ) : (
-          <div>
-            <LoggedInUser />
-          </div>
-        )}
+        <Routes>
+          {user ? (
+            <>
+              <Route path="/" element={loggedInUserStarter()} />
+              <Route
+                path="/users"
+                element={<BlogsPerUserTable users={users} />}
+              />
+              <Route path="/users/:id" element={<User users={users} />} />
+              <Route path="/blogs/:id" element={<Blog blogs={blogs} />} />
+            </>
+          ) : (
+            <>
+              <Route path="/" element={loggedOutUserStarter()} />
+              <Route path="/login" element={loggedOutUserStarter()} />
+            </>
+          )}
+        </Routes>
       </ErrorContextProvider>
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <NotificationContextProvider>
-                <Notification />
-                <BlogForm />
-              </NotificationContextProvider>
-              <BlogList blogs={blogs} />
-            </div>
-          }
-        />
-        <Route path="/users" element={<BlogsPerUserTable users={users} />} />
-        <Route path="/users/:id" element={<User users={users} />} />
-      </Routes>
     </div>
   );
 };
