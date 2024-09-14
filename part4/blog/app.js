@@ -12,10 +12,8 @@ const middleware = require('./utils/middleware')
 
 mongoose
   .connect(MONGODB_URI)
-  .then((result) => (info('Successful connection to MongoDB'), info(result)))
-  .catch((error) =>
-    errorInfo(`Failed to connect with error: ${error.message}`)
-  )
+  .then(() => info('Successful connection to MongoDB'))
+  .catch(() => errorInfo('Failed to connect with error'))
 
 app.use(cors())
 app.use(express.json())
