@@ -1,0 +1,17 @@
+{
+  "name": "phonebook",
+  "version": "1.0.0",
+  "description": "Phonebook server application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Javier Coronado",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.11.0",
+    "graphql": "^16.9.0",
+    "nodemon": "^3.1.5"
+  }
+}
