@@ -182,7 +182,11 @@ const resolvers = {
   Mutation: {
     addBook: (root, args) => {
       const authorName = args.author;
-      if (authors.filter((author) => !author.name.includes(authorName))) {
+      const filteredAuthors = authors.filter((author) =>
+        author.name.includes(authorName)
+      );
+      console.log("Filtered Authors", filteredAuthors);
+      if (filteredAuthors.length === 0) {
         console.log("AUTHOR DOES NOT EXIST", authorName);
         const author = { name: authorName };
         authors = authors.concat(author);
