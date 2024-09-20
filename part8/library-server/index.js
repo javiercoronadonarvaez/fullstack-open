@@ -68,12 +68,6 @@ type Query {
 }
 `;
 
-const authorNameRetriever = async (book) => {
-  const author = await Author.findById(book.author);
-  console.log("Found Author", author.name);
-  return author.name;
-};
-
 const resolvers = {
   Query: {
     dummy: () => 0,
@@ -146,7 +140,17 @@ const resolvers = {
       if (filteredAuthors.length === 0) {
         console.log("AUTHOR DOES NOT EXIST", authorName);
         const author = new Author({ name: authorName });
-        await author.save();
+        try {
+          await author.save();
+        } catch (error) {
+          throw new GraphQLError("Saving user failed", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.author,
+              error,
+            },
+          });
+        }
         book.author = author;
       } else {
         const author = await Author.findOne({ name: authorName });
@@ -154,19 +158,32 @@ const resolvers = {
         book.author = author;
         console.log("Resulting Book", book);
       }
-      await book.save();
+      await book.save().catch((error) => {
+        throw new GraphQLError("Creating the book failed", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.title,
+            error,
+          },
+        });
+      });
       return book;
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((author) => author.name === args.name);
+    editAuthor: async (root, args) => {
+      const author = await Author.find({ name: args.name });
       if (!author) {
         return null;
       }
-
-      const updatedAuthor = { ...author, born: args.setBornTo };
-      authors = authors.map((author) =>
-        author.name === args.name ? updatedAuthor : author
+      const updatedAuthor = await Author.findByIdAndUpdate(
+        author,
+        {
+          ...author,
+          born: args.setBornTo,
+        },
+        { new: true, runValidators: true, context: "query" }
       );
+      console.log("Updated author", updatedAuthor);
+
       return updatedAuthor;
     },
   },
