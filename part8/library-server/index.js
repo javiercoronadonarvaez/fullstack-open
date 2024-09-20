@@ -98,9 +98,9 @@ const resolvers = {
         console.log("BOOKS", filteredBooks);
         return filteredBooks;
       } else if (args.genre) {
-        const filteredGenreBooks = allBooks.filter((book) =>
-          book.genres.includes(args.genre)
-        );
+        const filteredGenreBooks = await Book.find({
+          genres: `${args.genre}`,
+        });
         console.log("Filtered Books", filteredGenreBooks);
         return filteredGenreBooks;
       }
@@ -110,12 +110,25 @@ const resolvers = {
     allAuthors: async () => Author.find({}),
   },
 
+  Book: {
+    author: async (root) => {
+      const author = await Author.findById(root.author);
+      console.log("Book innings", author.name);
+      return {
+        name: author.name,
+        id: author._id,
+        born: author.born,
+        bookCount: author.bookCount,
+      };
+    },
+  },
+
   Author: {
     bookCount: async (root) => {
-      const allBooks = await Book.find();
-      const filteredBooks = allBooks.filter(
-        (book) => book.author === root.name
-      );
+      const author = await Author.find({ name: root.name });
+      console.log("AUTHOR", author);
+      const filteredBooks = await Book.find({ author: author });
+      console.log("Filtered BOOKS", filteredBooks);
       return filteredBooks.length;
     },
   },
