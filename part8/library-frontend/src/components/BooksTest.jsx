@@ -6,7 +6,8 @@ import { useEffect } from "react";
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS);
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const [allGenres, setAllGenres] = useState(null);
+  const [allGenres, setAllGenres] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
   const { loading, error, data } = useQuery(FILTER_BOOKS_BY_GENRE, {
     variables: { genre: selectedGenre },
     skip: !selectedGenre,
@@ -17,9 +18,15 @@ const Books = (props) => {
       const books = result.data.allBooks;
       const bookGenres = books.map((book) => book.genres);
       const genres = Array.from(new Set(bookGenres.flat(Infinity)));
+      console.log("GENRES", genres);
       setAllGenres(genres);
+      setFilteredBooks(books);
     }
-  }, [selectedGenre, result.data]);
+    if (data) {
+      const books = data.allBooks;
+      setFilteredBooks(books);
+    }
+  }, [selectedGenre, result.data, data]);
 
   if (result.loading || loading) {
     console.log("HERE");
@@ -30,13 +37,7 @@ const Books = (props) => {
     return null;
   }
 
-  // const books = result.data.allBooks;
-  // console.log("BOOKS", books);
-  // const bookGenres = books.map((book) => book.genres);
-  // console.log("BOOK GENRES", bookGenres);
-  // const genres = Array.from(new Set(bookGenres.flat(Infinity)));
-  // console.log("GENRES", genres);
-  const filteredBooks = data ? data.allBooks : [];
+  // const filteredBooks = data ? data.allBooks : [];
 
   const renderGenreButtons = () => {
     return (

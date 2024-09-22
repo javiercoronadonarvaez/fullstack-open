@@ -16,7 +16,6 @@ export const ALL_BOOKS = gql`
       title
       author {
         name
-        bookCount
       }
       published
       genres
