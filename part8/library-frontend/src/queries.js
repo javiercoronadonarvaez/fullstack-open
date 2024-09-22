@@ -19,6 +19,30 @@ export const ALL_BOOKS = gql`
         bookCount
       }
       published
+      genres
+    }
+  }
+`;
+
+export const FILTER_BOOKS_BY_GENRE = gql`
+  query FilterBooksByGenre($genre: String) {
+    allBooks(genre: $genre) {
+      title
+      author {
+        name
+        bookCount
+      }
+      published
+      genres
+    }
+  }
+`;
+
+export const FETCH_USER = gql`
+  query {
+    me {
+      username
+      favoriteGenre
     }
   }
 `;
