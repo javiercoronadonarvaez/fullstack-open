@@ -97,39 +97,37 @@ const resolvers = {
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       const allBooks = await Book.find({});
-      console.log("All books", allBooks);
       if (args.author && args.genre) {
         const retrievedAuthor = await Author.findOne({ name: args.author });
-        console.log("Retrieved Author", retrievedAuthor);
         const filteredBooks = await Book.find({
           author: retrievedAuthor,
           genres: `${args.genre}`,
         });
-        console.log("Filtered Books", filteredBooks);
         return filteredBooks;
       } else if (args.author) {
         const retrievedAuthor = await Author.findOne({ name: args.author });
-        console.log("Retrieved Author", retrievedAuthor);
         const filteredBooks = await Book.find({ author: retrievedAuthor });
-        console.log("BOOKS", filteredBooks);
         return filteredBooks;
       } else if (args.genre) {
+        console.log("GENRE ACTIVATED");
         const filteredGenreBooks = await Book.find({
           genres: `${args.genre}`,
         });
-        console.log("Filtered Books", filteredGenreBooks);
+        console.log("Filtered Books By Genre", filteredGenreBooks);
         return filteredGenreBooks;
       }
-
+      console.log("ALL BOOKS", allBooks);
       return allBooks;
     },
     allAuthors: async () => Author.find({}),
+    me: (root, args, context) => {
+      return context.currentUser;
+    },
   },
 
   Book: {
     author: async (root) => {
       const author = await Author.findById(root.author);
-      console.log("Book innings", author.name);
       return {
         name: author.name,
         id: author._id,
@@ -142,9 +140,7 @@ const resolvers = {
   Author: {
     bookCount: async (root) => {
       const author = await Author.find({ name: root.name });
-      console.log("AUTHOR", author);
       const filteredBooks = await Book.find({ author: author });
-      console.log("Filtered BOOKS", filteredBooks);
       return filteredBooks.length;
     },
   },
