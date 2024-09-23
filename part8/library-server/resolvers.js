@@ -35,7 +35,7 @@ const resolvers = {
       console.log("ALL BOOKS", allBooks);
       return allBooks;
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => Author.find({}).populate("books"),
     me: (root, args, context) => {
       return context.currentUser;
     },
@@ -55,9 +55,13 @@ const resolvers = {
 
   Author: {
     bookCount: async (root) => {
-      const author = await Author.find({ name: root.name });
-      const filteredBooks = await Book.find({ author: author });
-      return filteredBooks.length;
+      console.log("ROOT", root);
+      if (root.books) {
+        return root.books.length;
+      }
+      const author = await Author.find({ name: root.name }).populate("books");
+      console.log("Populated Author Books", author[0].books);
+      return author[0].books.length;
     },
   },
 
@@ -73,16 +77,12 @@ const resolvers = {
       }
 
       const authorName = args.author;
-      const authors = await Author.find({});
-      console.log("Retrieved Authors", authors);
-      const filteredAuthors = authors.filter((author) =>
-        author.name.includes(authorName)
-      );
-      console.log("Filtered Authors", filteredAuthors);
       let book = new Book({ ...args });
-      if (filteredAuthors.length === 0) {
+      let author = await Author.findOne({ name: authorName });
+      if (!author) {
         console.log("AUTHOR DOES NOT EXIST", authorName);
-        const author = new Author({ name: authorName });
+        console.log("New Book Title", book.title);
+        author = new Author({ name: authorName, books: book.title });
         try {
           await author.save();
         } catch (error) {
@@ -94,13 +94,14 @@ const resolvers = {
             },
           });
         }
-        book.author = author;
       } else {
-        const author = await Author.findOne({ name: authorName });
+        author.books = author.books.concat(book.title);
+        await author.save();
         console.log("Existing Author", author.name);
-        book.author = author;
-        console.log("Resulting Book", book);
       }
+
+      book.author = author;
+
       await book.save().catch((error) => {
         throw new GraphQLError("Creating the book failed", {
           extensions: {

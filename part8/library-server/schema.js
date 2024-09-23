@@ -25,6 +25,7 @@ type Author {
     name: String!
     id: ID
     born: Int
+    books: [String!]
     bookCount: Int
 }
 
