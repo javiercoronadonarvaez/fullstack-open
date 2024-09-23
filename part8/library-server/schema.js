@@ -36,13 +36,6 @@ type Mutation {
         id: ID
         genres: [String!]!
     ): Book
-    addBookSchema(
-        title: String!
-        published: Int!
-        author: String!
-        id: String
-        genres: [String!]!
-    ): Book
     editAuthor(
         name: String!
         setBornTo: Int!
