@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import {
-  ALL_BOOKS,
-  ALL_AUTHORS,
-  ADD_BOOK,
-  FILTER_BOOKS_BY_GENRE,
-} from "../queries";
+import { ADD_BOOK } from "../queries";
 
 const NewBook = (props) => {
   const [title, setTitle] = useState("");
@@ -14,57 +9,7 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
-  const [appendBook] = useMutation(ADD_BOOK, {
-    update: (cache, response) => {
-      const newBook = response.data.addBook;
-      console.log("Updated Response All Books", response.data);
-      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-        console.log("All BOOKS", allBooks);
-        return {
-          allBooks: allBooks.concat(newBook),
-        };
-      });
-      cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
-        console.log("All AUTHORS", allAuthors);
-        const author = response.data.addBook.author;
-        const existingAuthors = allAuthors.map((author) => author.name);
-        if (existingAuthors.includes(author.name)) {
-          const updatedAllAuthors = allAuthors.map((existingAuthor) =>
-            existingAuthor.name === author.name ? author : existingAuthor
-          );
-          return { allAuthors: updatedAllAuthors };
-        }
-        return {
-          allAuthors: allAuthors.concat(author),
-        };
-      });
-      const newBookGenres = newBook.genres;
-      newBookGenres.forEach((genre) => {
-        console.log("MAPPED GENRE", genre);
-        cache.updateQuery(
-          {
-            query: FILTER_BOOKS_BY_GENRE,
-            variables: { genre: genre },
-          },
-          (data) => {
-            console.log("DATA FROM FETCH", data);
-            if (data) {
-              console.log("DATA FROM FETCH RENDERED", data);
-              const allBooks = data.allBooks;
-              return {
-                allBooks: allBooks.concat(newBook),
-              };
-            }
-
-            const allBooks = [];
-            return {
-              allBooks: allBooks.concat(newBook),
-            };
-          }
-        );
-      });
-    },
-  });
+  const [appendBook] = useMutation(ADD_BOOK);
 
   if (!props.show) {
     return null;
