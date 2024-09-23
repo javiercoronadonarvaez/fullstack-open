@@ -30,6 +30,7 @@ const SetBirthday = () => {
     updateAuthor({
       variables: { name: selectedAuthor.value, setBornTo: bornYear },
     });
+    setBornYear("");
     console.log("UPDATED VALUES", selectedAuthor.value, bornYear);
   };
 
