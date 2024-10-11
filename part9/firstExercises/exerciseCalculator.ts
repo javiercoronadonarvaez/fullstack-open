@@ -40,7 +40,7 @@ const exerciseAnalysis = (exerciseArray: number[], target: number) => {
   const success = average < target ? false : true;
   const targetCompletionProportion = average / target;
   let ratingDescription = "";
-  let rating: number;
+  let rating = 0;
   switch (true) {
     case targetCompletionProportion > 0 && targetCompletionProportion < 0.5:
       ratingDescription = "Mediocre Attempt";

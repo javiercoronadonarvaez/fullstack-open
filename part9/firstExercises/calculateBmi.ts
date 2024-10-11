@@ -27,9 +27,8 @@ type BMI =
   | "Obese (Class II)"
   | "Obese (Class III)";
 
-const calculateBmi = (height: number, weight: number): BMI => {
+export const calculateBmi = (height: number, weight: number): BMI => {
   const bmi = weight / (height / 100) ** 2;
-  console.log("BMI", bmi);
   switch (true) {
     case bmi > 0 && bmi < 16:
       return "Underweight (Severe thinness)";
@@ -52,13 +51,15 @@ const calculateBmi = (height: number, weight: number): BMI => {
   }
 };
 
-try {
-  const { height, weight } = parseHeightAndWeightArguments(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
+if (require.main === module) {
+  try {
+    const { height, weight } = parseHeightAndWeightArguments(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (error: unknown) {
+    let errorMessage = "Something bad happened.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
