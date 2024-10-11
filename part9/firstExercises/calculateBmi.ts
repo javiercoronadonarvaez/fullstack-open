@@ -1,9 +1,9 @@
-interface MultiplyValues {
+interface HeightAndWeight {
   height: number;
   weight: number;
 }
 
-const parseArguments = (args: string[]): MultiplyValues => {
+const parseHeightAndWeightArguments = (args: string[]): HeightAndWeight => {
   if (args.length < 4) throw new Error("Not enough arguments");
   if (args.length > 4) throw new Error("Too many arguments");
 
@@ -53,9 +53,8 @@ const calculateBmi = (height: number, weight: number): BMI => {
 };
 
 try {
-  // const { height, weight } = parseArguments(process.argv);
-  // console.log(calculateBmi(height, weight));
-  console.log(calculateBmi(180, 74));
+  const { height, weight } = parseHeightAndWeightArguments(process.argv);
+  console.log(calculateBmi(height, weight));
 } catch (error: unknown) {
   let errorMessage = "Something bad happened.";
   if (error instanceof Error) {
