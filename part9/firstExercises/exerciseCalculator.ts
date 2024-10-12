@@ -10,7 +10,7 @@ const parseTrainingArguments = (args: string[]): ExerciseArray => {
     throw new Error("Provided values were not numbers!");
   }
 
-  let exerciseRecord: number[] = [];
+  const exerciseRecord: number[] = [];
 
   for (let i = 3; i < args.length; i++) {
     if (!isNaN(Number(args[i]))) {
@@ -25,7 +25,7 @@ const parseTrainingArguments = (args: string[]): ExerciseArray => {
   };
 };
 
-const exerciseAnalysis = (exerciseArray: number[], target: number) => {
+export const exerciseAnalysis = (exerciseArray: number[], target: number) => {
   const periodLength = exerciseArray.length;
   const trainingDays = exerciseArray.reduce(
     (accumulator, currentValue) =>
@@ -55,7 +55,6 @@ const exerciseAnalysis = (exerciseArray: number[], target: number) => {
       rating = 3;
       break;
     default:
-      ratingDescription;
   }
   return {
     periodLength: periodLength,
@@ -68,13 +67,15 @@ const exerciseAnalysis = (exerciseArray: number[], target: number) => {
   };
 };
 
-try {
-  const { exerciseArray, target } = parseTrainingArguments(process.argv);
-  console.log(exerciseAnalysis(exerciseArray, target));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
+if (require.main === module) {
+  try {
+    const { exerciseArray, target } = parseTrainingArguments(process.argv);
+    console.log(exerciseAnalysis(exerciseArray, target));
+  } catch (error: unknown) {
+    let errorMessage = "Something bad happened.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
