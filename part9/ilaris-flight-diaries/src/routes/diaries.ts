@@ -8,7 +8,7 @@ import { NewDiaryEntry, DiaryEntry } from "../types";
 const router = express.Router();
 
 router.get("/", (_req, res: Response<DiaryEntry[]>) => {
-  res.send(diaryService.getNonSensitiveEntries());
+  res.send(diaryService.getEntries());
 });
 
 router.get("/:id", (req, res) => {
