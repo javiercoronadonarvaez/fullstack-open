@@ -1,12 +1,8 @@
+import Part from "./Part";
 import { ContentProps } from "../types";
 
-const Content = (props: ContentProps) => {
-  const courses = props.courses;
-  return courses.map((course, index) => (
-    <p key={index}>
-      {course.name} {course.exerciseCount}
-    </p>
-  ));
+const Content = ({ courses }: ContentProps) => {
+  return courses.map((course, index) => <Part key={index} course={course} />);
 };
 
 export default Content;
