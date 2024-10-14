@@ -1,24 +1,22 @@
-import { useState, useEffect } from "react";
-import { DiaryEntry } from "./types";
-import { getAllDiaries } from "./services/diariesService";
+import { useEffect } from "react";
+import { initializeDiaries } from "./reducers/diariesReducer";
+import { useAppDispatch } from "./hooks/hook";
 import Diaries from "./components/Diaries";
 import NewDiary from "./components/NewDiary";
+import Error from "./components/Error";
 
 const App = () => {
-  const [diaries, setDiaries] = useState<DiaryEntry[]>([]);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const fetchInitialDiaries = async () => {
-      const fetchedInitialDiaries = await getAllDiaries();
-      setDiaries(fetchedInitialDiaries);
-    };
-    fetchInitialDiaries();
-  }, []);
+    dispatch(initializeDiaries());
+  }, [dispatch]);
 
   return (
     <div>
-      <Diaries diaries={diaries} />
+      <Error />
       <NewDiary />
+      <Diaries />
     </div>
   );
 };

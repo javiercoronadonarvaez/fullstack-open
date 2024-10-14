@@ -1,45 +1,45 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { configureStore } from "@reduxjs/toolkit";
+import { DiaryEntry, NewDiaryEntry } from "../types";
+import { getAllDiaries, addNewDiary } from "../services/diariesService";
+import { AppDispatch } from "./store";
+import { setError } from "./errorReducer";
 
-// Define a type for the slice state
-interface CounterState {
-  value: number;
-}
+const initialState: DiaryEntry[] = [];
 
-// Define the initial state using that type
-const initialState: CounterState = {
-  value: 0,
-};
-
-// Create a slice of state
-const counterSlice = createSlice({
-  name: "counter",
+const diariesSlice = createSlice({
+  name: "diaries",
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    setDiaries: (_state, action: PayloadAction<DiaryEntry[]>) => {
+      return action.payload;
     },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload;
+    updateDiariesWithNewEntry: (state, action: PayloadAction<DiaryEntry>) => {
+      const newDiary = action.payload;
+      const updatedDiaries = state.concat(newDiary);
+      return updatedDiaries;
     },
   },
 });
 
-// Export the actions
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { setDiaries, updateDiariesWithNewEntry } = diariesSlice.actions;
 
-// Create the store
-const store = configureStore({
-  reducer: {
-    counter: counterSlice.reducer,
-  },
-});
+export const initializeDiaries = () => {
+  return async (dispatch: AppDispatch) => {
+    const diaries = await getAllDiaries();
+    dispatch(setDiaries(diaries));
+  };
+};
 
-// Define RootState and AppDispatch types for type inference in components
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export const addNewDiaryEntry = (newDiary: NewDiaryEntry) => {
+  return async (dispatch: AppDispatch) => {
+    const newlyCreatedDiary = await addNewDiary(newDiary);
+    if (typeof newlyCreatedDiary === "string") {
+      dispatch(setError(newlyCreatedDiary)); // Assuming setError expects a string
+      console.error("Failed to create diary entry:", newlyCreatedDiary);
+    } else {
+      dispatch(updateDiariesWithNewEntry(newlyCreatedDiary));
+    }
+  };
+};
 
-export default store;
+export default diariesSlice.reducer;
