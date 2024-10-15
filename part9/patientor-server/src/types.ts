@@ -62,7 +62,7 @@ export type Entry =
 export interface Patient {
   id: string;
   name: string;
-  ssn?: string;
+  ssn: string;
   occupation: string;
   gender: Gender;
   dateOfBirth: string;

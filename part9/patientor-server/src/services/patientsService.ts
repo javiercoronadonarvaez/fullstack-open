@@ -26,9 +26,13 @@ const getAllPatients = (): Patient[] => {
   return patients;
 };
 
+// const getPatientAttributes = (id: string): Patient | null => {
+//   const patient = patients.find((patient) => patient.id === id);
+//   return patient ? { ...patient, entries: [] } : null;
+// };
 const getPatientAttributes = (id: string): Patient | null => {
   const patient = patients.find((patient) => patient.id === id);
-  return patient ? { ...patient, entries: [] } : null;
+  return patient ? patient : null;
 };
 
 const addPatient = (entry: NewPatientEntry): Patient => {
