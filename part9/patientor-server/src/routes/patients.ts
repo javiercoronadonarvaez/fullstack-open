@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import { Patient, NewPatientEntry } from "../types";
-import { NewEntrySchema } from "../utils";
+import { NewEntrySchema, toNewEntry } from "../utils";
 import { z } from "zod";
 
 import patientsService from "../services/patientsService";
@@ -17,6 +17,19 @@ router.get("/:id", (req, res: Response) => {
 
   if (patient) {
     res.send(patient);
+  } else {
+    res.status(404).send({ error: "Patient not found" });
+  }
+});
+
+router.post("/:id/entries", (req, res: Response) => {
+  const id: string = req.params.id;
+  const patient = patientsService.getPatientAttributes(id);
+  const newDiaryEntry = toNewEntry(req.body);
+  const updatedPatient = patientsService.addEntry(newDiaryEntry, id);
+
+  if (patient) {
+    res.send(updatedPatient);
   } else {
     res.status(404).send({ error: "Patient not found" });
   }
