@@ -11,6 +11,17 @@ router.get("/", (_req, res: Response<Patient[]>) => {
   res.send(patientsService.getSelectedPatientAttributes());
 });
 
+router.get("/:id", (req, res: Response) => {
+  const id: string = req.params.id;
+  const patient = patientsService.getPatientAttributes(id);
+
+  if (patient) {
+    res.send(patient);
+  } else {
+    res.status(404).send({ error: "Patient not found" });
+  }
+});
+
 const newPatientParser = (req: Request, _res: Response, next: NextFunction) => {
   try {
     NewEntrySchema.parse(req.body);

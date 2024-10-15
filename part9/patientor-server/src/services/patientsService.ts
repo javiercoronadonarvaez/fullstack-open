@@ -1,8 +1,8 @@
 import patients from "../../data/patients";
 import { v1 as uuid } from "uuid";
-import { PatientFormValues, NewPatientEntry, Patient } from "../types";
+import { NonSensitivePatient, NewPatientEntry, Patient } from "../types";
 
-const getSelectedPatientAttributes = (): PatientFormValues[] => {
+const getSelectedPatientAttributes = (): NonSensitivePatient[] => {
   console.log(patients);
   return patients.map(({ id, name, occupation, gender, dateOfBirth }) => ({
     id,
@@ -13,10 +13,16 @@ const getSelectedPatientAttributes = (): PatientFormValues[] => {
   }));
 };
 
+const getPatientAttributes = (id: string): Patient | null => {
+  const patient = patients.find((patient) => patient.id === id);
+  return patient ? { ...patient, entries: [] } : null;
+};
+
 const addPatient = (entry: NewPatientEntry): Patient => {
   const newPatientEntry = {
     id: uuid(),
     ...entry,
+    entries: [],
   };
 
   patients.push(newPatientEntry);
@@ -26,4 +32,5 @@ const addPatient = (entry: NewPatientEntry): Patient => {
 export default {
   getSelectedPatientAttributes,
   addPatient,
+  getPatientAttributes,
 };

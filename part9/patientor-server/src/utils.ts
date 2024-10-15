@@ -5,7 +5,7 @@ export const NewEntrySchema = z.object({
   name: z.string(),
   occupation: z.string(),
   gender: z.nativeEnum(Gender),
-  ssn: z.string().optional(),
+  ssn: z.string(),
   dateOfBirth: z.string().date(),
 });
 
