@@ -13,12 +13,17 @@ const getSelectedPatientAttributes = (): NonSensitivePatient[] => {
   }));
 };
 
+// const getAllPatients = (): Patient[] => {
+//   console.log(patients);
+//   return patients.map((patient) => {
+//     const updatedPatient = { ...patient, entries: [] };
+//     return updatedPatient;
+//   });
+// };
+
 const getAllPatients = (): Patient[] => {
   console.log(patients);
-  return patients.map((patient) => {
-    const updatedPatient = { ...patient, entries: [] };
-    return updatedPatient;
-  });
+  return patients;
 };
 
 const getPatientAttributes = (id: string): Patient | null => {
