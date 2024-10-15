@@ -13,6 +13,14 @@ const getSelectedPatientAttributes = (): NonSensitivePatient[] => {
   }));
 };
 
+const getAllPatients = (): Patient[] => {
+  console.log(patients);
+  return patients.map((patient) => {
+    const updatedPatient = { ...patient, entries: [] };
+    return updatedPatient;
+  });
+};
+
 const getPatientAttributes = (id: string): Patient | null => {
   const patient = patients.find((patient) => patient.id === id);
   return patient ? { ...patient, entries: [] } : null;
@@ -30,6 +38,7 @@ const addPatient = (entry: NewPatientEntry): Patient => {
 };
 
 export default {
+  getAllPatients,
   getSelectedPatientAttributes,
   addPatient,
   getPatientAttributes,

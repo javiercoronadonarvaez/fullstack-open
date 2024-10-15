@@ -8,7 +8,7 @@ import patientsService from "../services/patientsService";
 const router = express.Router();
 
 router.get("/", (_req, res: Response<Patient[]>) => {
-  res.send(patientsService.getSelectedPatientAttributes());
+  res.send(patientsService.getAllPatients());
 });
 
 router.get("/:id", (req, res: Response) => {
