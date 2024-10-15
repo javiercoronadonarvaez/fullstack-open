@@ -9,12 +9,20 @@ export const useField = (type: string) => {
   const [value, setValue] = useState("");
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("SELECTED RADIO", event.target.value);
     setValue(event.target.value);
   };
 
+  const removeValue = () => {
+    setValue("");
+  };
+
   return {
-    type,
-    value,
-    onChange,
+    input: {
+      type,
+      value,
+      onChange,
+    },
+    removeValue,
   };
 };

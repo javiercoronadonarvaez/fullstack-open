@@ -19,7 +19,7 @@ const Error = () => {
 
   return (
     <div style={display} className="error">
-      {error}
+      Error: {error}
     </div>
   );
 };
