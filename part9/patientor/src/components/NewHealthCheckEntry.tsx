@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useField } from "../hooks/hook";
 import { Diagnosis, EntryWithoutId } from "../types";
+import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import Error from "./Error";
 import axios from "axios";
 import patientService from "../services/patients";
 
@@ -11,19 +13,35 @@ export interface Props {
 }
 
 const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
-  //const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string>("");
+  const [diagnosisCode, setDiagnosisCode] = useState<string>("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
 
-  //   const openModal = (): void => setModalOpen(true);
-
-  //   const closeModal = (): void => {
-  //     setModalOpen(false);
-  //     setError(undefined);
-  //   };
   const description = useField("text");
   const date = useField("date");
   const specialist = useField("text");
-  //const diagnosisCode = useField("text");
+
+  const diagnosisCodeOptions = diagnosis.map((diag) => ({
+    value: diag.code,
+    label: diag.code,
+  }));
+
+  const onClick = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    if (diagnosisCode) {
+      setDiagnosisCodes(diagnosisCodes.concat(diagnosisCode));
+      setDiagnosisCode("");
+    }
+  };
+
+  const onCodeChange = (event: SelectChangeEvent<string>) => {
+    event.preventDefault();
+    if (typeof event.target.value === "string") {
+      const value = event.target.value;
+      console.log("SELECTED VALUE", value);
+      setDiagnosisCode(value);
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -33,6 +51,7 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
         specialist: specialist.input.value,
         type: "HealthCheck",
         healthCheckRating: 0,
+        diagnosisCodes: diagnosisCodes,
       } as unknown as EntryWithoutId;
       await patientService.updateEntry(patientId, newEntry);
       //setModalOpen(false);
@@ -46,6 +65,7 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
           console.error(message);
           setError(message);
         } else {
+          console.error(e);
           setError("Unrecognized axios error");
         }
       } else {
@@ -55,12 +75,25 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
     }
   };
 
+  const mainStyle = {
+    border: "1px solid black",
+    padding: "10px",
+    borderRadius: "5px",
+    margin: "10px 0",
+  };
+
   const display =
-    show === "New Health Check Entry" ? { display: "" } : { display: "none" };
+    show === "New Health Check Entry"
+      ? { ...mainStyle, display: "" }
+      : { ...mainStyle, display: "none" };
 
   return (
     <div style={display}>
+      <p>
+        <strong>New HealtchCheck Entry</strong>
+      </p>
       <form onSubmit={handleSubmit}>
+        <Error error={error} setError={setError} />
         <p>
           Description <input {...description.input} />
         </p>
@@ -70,8 +103,29 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
         <p>
           Specialist <input {...specialist.input} />
         </p>
-        <button type="submit">ADD</button>
+        Diagnosis Codes{" "}
+        <Select
+          label="Diagnostic Codes"
+          fullWidth
+          value={diagnosisCode}
+          onChange={onCodeChange}
+        >
+          {diagnosisCodeOptions.map((diagnosisCode) => (
+            <MenuItem key={diagnosisCode.label} value={diagnosisCode.value}>
+              {diagnosisCode.value}
+            </MenuItem>
+          ))}
+        </Select>
+        <button onClick={onClick}>ADD CODE</button>
+        <p>
+          Selected Codes:{" "}
+          {diagnosisCodes.map((diagnosisCode, index) =>
+            index > 0 ? `, ${diagnosisCode}` : diagnosisCode
+          )}
+        </p>
+        <button type="submit">ADD ENTRY</button>
       </form>
+      <button>CANCEL</button>
     </div>
   );
 };
