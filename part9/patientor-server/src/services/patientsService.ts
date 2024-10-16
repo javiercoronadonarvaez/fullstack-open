@@ -51,6 +51,12 @@ const addPatient = (entry: NewPatientEntry): Patient => {
 };
 
 const addEntry = (entry: EntryWithoutId, id: string): Patient | undefined => {
+  //console.log("NEWEST ENTRY", entry);
+  if (!entry) {
+    console.log("NO GOOD ENTRY", entry);
+    return entry;
+  }
+
   const newEntry = {
     id: uuid(),
     ...entry,

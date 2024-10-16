@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Patient, Diagnosis } from "../types";
 import { entryDetailsFetcher } from "../utils/utils";
+import NewHealthCheckEntry from "./NewHealthCheckEntry";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 
@@ -9,6 +11,8 @@ interface IndividualPatient {
 }
 
 const PatientInfo = ({ patient, diagnosis }: IndividualPatient) => {
+  const [entryFormat, setEntryFormat] = useState<string>("");
+
   if (!patient) {
     return <p>Patient not found.</p>;
   }
@@ -21,6 +25,22 @@ const PatientInfo = ({ patient, diagnosis }: IndividualPatient) => {
         {patient.name}{" "}
         {patient.gender === "male" ? <MaleIcon /> : <FemaleIcon />}
       </h2>
+      <button onClick={() => setEntryFormat("New Health Check Entry")}>
+        New Health Check Entry
+      </button>
+      <button onClick={() => setEntryFormat("New Hospital Entry")}>
+        New Hospital Entry
+      </button>
+      <button
+        onClick={() => setEntryFormat("New Occupational Healthcare Entry")}
+      >
+        New Occupational Healthcare Entry
+      </button>
+      <NewHealthCheckEntry
+        diagnosis={diagnosis}
+        show={entryFormat}
+        patientId={patient.id}
+      />
       <p>ssn: {patient.ssn}</p>
       <p>Occupation: {patient.occupation}</p>
       <h2>Entries</h2>

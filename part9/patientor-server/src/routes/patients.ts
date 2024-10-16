@@ -22,16 +22,16 @@ router.get("/:id", (req, res: Response) => {
   }
 });
 
-router.post("/:id/entries", (req, res: Response) => {
+router.post("/:id/entries", (req, res: Response, next: NextFunction) => {
   const id: string = req.params.id;
-  const patient = patientsService.getPatientAttributes(id);
-  const newDiaryEntry = toNewEntry(req.body);
-  const updatedPatient = patientsService.addEntry(newDiaryEntry, id);
-
-  if (patient) {
+  try {
+    const newEntry = toNewEntry(req.body);
+    console.log("NEW ENTRY", newEntry);
+    const updatedPatient = patientsService.addEntry(newEntry, id);
+    console.log("UPDATED PATIENT", updatedPatient);
     res.send(updatedPatient);
-  } else {
-    res.status(404).send({ error: "Patient not found" });
+  } catch (error: unknown) {
+    next(error);
   }
 });
 
@@ -53,6 +53,8 @@ const errorMiddleware = (
 ) => {
   if (error instanceof z.ZodError) {
     res.status(400).send({ error: error.issues });
+  } else if (error instanceof Error) {
+    res.status(400).send({ error: error.message });
   } else {
     next(error);
   }
