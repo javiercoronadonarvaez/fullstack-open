@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useField } from "../hooks/hook";
-import { Diagnosis, EntryWithoutId } from "../types";
+import { Diagnosis, EntryWithoutId, HealthCheckRating } from "../types";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import Error from "./Error";
 import axios from "axios";
@@ -10,12 +10,21 @@ export interface Props {
   diagnosis: Diagnosis[];
   patientId: string;
   show: string;
+  setEntryFormat: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
+const NewHealthCheckEntry = ({
+  diagnosis,
+  show,
+  patientId,
+  setEntryFormat,
+}: Props) => {
   const [error, setError] = useState<string>("");
   const [diagnosisCode, setDiagnosisCode] = useState<string>("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
+  const [healthchekRating, setHealthchekRating] = useState<
+    number | "" | undefined
+  >("");
 
   const description = useField("text");
   const date = useField("date");
@@ -25,6 +34,15 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
     value: diag.code,
     label: diag.code,
   }));
+
+  const healthCheckRatingOptions = Object.values(HealthCheckRating)
+    .filter((_, index) => index > 3) // Filter elements with index greater than 3
+    .map((v) => ({
+      value: v,
+      label: v.toString(),
+    }));
+
+  console.log("HEALTH", healthCheckRatingOptions);
 
   const onClick = (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -43,6 +61,15 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
     }
   };
 
+  const onHealthCheckRatingChange = (event: SelectChangeEvent<number>) => {
+    event.preventDefault();
+    if (typeof event.target.value === "number") {
+      const value = event.target.value;
+      console.log("SELECTED VALUE", value);
+      setHealthchekRating(value);
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       const newEntry = {
@@ -54,7 +81,6 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
         diagnosisCodes: diagnosisCodes,
       } as unknown as EntryWithoutId;
       await patientService.updateEntry(patientId, newEntry);
-      //setModalOpen(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -123,9 +149,26 @@ const NewHealthCheckEntry = ({ diagnosis, show, patientId }: Props) => {
             index > 0 ? `, ${diagnosisCode}` : diagnosisCode
           )}
         </p>
+        Health Check Rating{" "}
+        <Select
+          label="Health Check Rating"
+          fullWidth
+          value={healthchekRating}
+          onChange={onHealthCheckRatingChange}
+        >
+          {healthCheckRatingOptions.map((healthCheckRating) => (
+            <MenuItem
+              key={healthCheckRating.label}
+              value={healthCheckRating.value}
+            >
+              {healthCheckRating.value}
+            </MenuItem>
+          ))}
+        </Select>
+        <p>Selected Rating: {healthchekRating}</p>
         <button type="submit">ADD ENTRY</button>
       </form>
-      <button>CANCEL</button>
+      <button onClick={() => setEntryFormat("")}>CANCEL</button>
     </div>
   );
 };

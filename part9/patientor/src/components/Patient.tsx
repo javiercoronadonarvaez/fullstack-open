@@ -40,6 +40,7 @@ const PatientInfo = ({ patient, diagnosis }: IndividualPatient) => {
         diagnosis={diagnosis}
         show={entryFormat}
         patientId={patient.id}
+        setEntryFormat={setEntryFormat}
       />
       <p>ssn: {patient.ssn}</p>
       <p>Occupation: {patient.occupation}</p>
