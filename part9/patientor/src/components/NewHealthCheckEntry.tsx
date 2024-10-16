@@ -42,8 +42,6 @@ const NewHealthCheckEntry = ({
       label: v.toString(),
     }));
 
-  console.log("HEALTH", healthCheckRatingOptions);
-
   const onClick = (event: React.SyntheticEvent) => {
     event.preventDefault();
     if (diagnosisCode) {
@@ -92,8 +90,8 @@ const NewHealthCheckEntry = ({
           console.error(message);
           setError(message);
         } else {
-          console.error(e);
-          setError("Unrecognized axios error");
+          const error = e.response?.data.error;
+          setError(error);
         }
       } else {
         console.error("Unknown error", e);

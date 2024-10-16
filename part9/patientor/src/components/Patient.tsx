@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Patient, Diagnosis } from "../types";
+import { useEffect, useState } from "react";
+import { Patient, Diagnosis, Entry } from "../types";
 import { entryDetailsFetcher } from "../utils/utils";
 import NewHealthCheckEntry from "./NewHealthCheckEntry";
 import NewHospitalEntry from "./NewHospitalEntry";
@@ -14,12 +14,17 @@ interface IndividualPatient {
 
 const PatientInfo = ({ patient, diagnosis }: IndividualPatient) => {
   const [entryFormat, setEntryFormat] = useState<string>("");
+  const [entries, setEntries] = useState<Entry[] | undefined>();
+
+  useEffect(() => {
+    if (patient?.entries) {
+      setEntries(patient.entries);
+    }
+  }, [patient]);
 
   if (!patient) {
-    return <p>Patient not found.</p>;
+    return <p>Patient Not Found</p>;
   }
-
-  const entries = patient.entries ? patient.entries : null;
 
   return (
     <div>
