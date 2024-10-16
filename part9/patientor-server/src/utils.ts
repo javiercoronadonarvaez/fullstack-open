@@ -20,19 +20,35 @@ const isString = (text: unknown): text is string => {
 };
 
 const parseDescription = (description: unknown): string => {
-  if (!isString(description)) {
-    throw new Error("Incorrect comment");
+  if (!description || !isString(description)) {
+    throw new Error("Description missing");
   }
 
   return description;
 };
 
+const parseCriteria = (criteria: unknown): string => {
+  if (!criteria || !isString(criteria)) {
+    throw new Error("Criteria missing");
+  }
+
+  return criteria;
+};
+
 const parseSpecialist = (specialist: unknown): string => {
-  if (!isString(specialist)) {
-    throw new Error("Incorrect comment");
+  if (!specialist || !isString(specialist)) {
+    throw new Error("Specialist missing");
   }
 
   return specialist;
+};
+
+const parseEmployer = (employerName: unknown): string => {
+  if (!employerName || !isString(employerName)) {
+    throw new Error("Employer Name missing");
+  }
+
+  return employerName;
 };
 
 const isDate = (date: string): boolean => {
@@ -121,7 +137,7 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
             type: "Hospital", // Narrow type explicitly here
             discharge: {
               date: parseDate(discharge.date),
-              criteria: parseDescription(discharge.criteria),
+              criteria: parseCriteria(discharge.criteria),
             },
           };
         }
@@ -133,7 +149,7 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
           const entry = {
             ...baseEntry,
             type: "OccupationalHealthcare", // Narrow type explicitly here
-            employerName: parseDescription(object.employerName),
+            employerName: parseEmployer(object.employerName),
           } as EntryWithoutId;
 
           if ("sickLeave" in object) {
@@ -145,7 +161,7 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
             return {
               ...baseEntry,
               type: "OccupationalHealthcare", // Narrow type explicitly here
-              employerName: parseDescription(object.employerName),
+              employerName: parseEmployer(object.employerName),
               sickLeave: {
                 startDate: parseDate(sickLeave.startDate),
                 endDate: parseDate(sickLeave.endDate),

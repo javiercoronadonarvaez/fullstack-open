@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useField } from "../hooks/hook";
-import { Diagnosis, EntryWithoutId, HealthCheckRating } from "../types";
+import { Diagnosis, EntryWithoutId, HealthCheckRating, Entry } from "../types";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import Error from "./Error";
 import axios from "axios";
@@ -11,6 +11,7 @@ export interface Props {
   patientId: string;
   show: string;
   setEntryFormat: React.Dispatch<React.SetStateAction<string>>;
+  setEntries: React.Dispatch<React.SetStateAction<Entry[] | undefined>>;
 }
 
 const NewHealthCheckEntry = ({
@@ -18,6 +19,7 @@ const NewHealthCheckEntry = ({
   show,
   patientId,
   setEntryFormat,
+  setEntries,
 }: Props) => {
   const [error, setError] = useState<string>("");
   const [diagnosisCode, setDiagnosisCode] = useState<string>("");
@@ -79,7 +81,16 @@ const NewHealthCheckEntry = ({
         healthCheckRating: healthchekRating,
         diagnosisCodes: diagnosisCodes,
       } as unknown as EntryWithoutId;
-      await patientService.updateEntry(patientId, newEntry);
+      const returnedPatient = await patientService.updateEntry(
+        patientId,
+        newEntry
+      );
+      setEntries(returnedPatient.entries);
+      description.removeValue();
+      date.removeValue();
+      specialist.removeValue();
+      setDiagnosisCodes([]);
+      setHealthchekRating("");
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {

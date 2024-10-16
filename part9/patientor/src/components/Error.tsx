@@ -1,3 +1,5 @@
+import { DialogContent, Alert } from "@mui/material";
+
 interface Props {
   error: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
@@ -15,9 +17,9 @@ const Error = ({ error, setError }: Props) => {
   }
 
   return (
-    <div style={display} className="error">
-      Error: {error}
-    </div>
+    <DialogContent style={display}>
+      {error && <Alert severity="error">{error}</Alert>}
+    </DialogContent>
   );
 };
 

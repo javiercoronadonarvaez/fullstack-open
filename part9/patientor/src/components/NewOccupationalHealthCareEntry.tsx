@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useField } from "../hooks/hook";
-import { Diagnosis, EntryWithoutId } from "../types";
+import { Diagnosis, EntryWithoutId, Entry } from "../types";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import Error from "./Error";
 import axios from "axios";
@@ -11,6 +11,7 @@ export interface Props {
   patientId: string;
   show: string;
   setEntryFormat: React.Dispatch<React.SetStateAction<string>>;
+  setEntries: React.Dispatch<React.SetStateAction<Entry[] | undefined>>;
 }
 
 const NewOccupationalHealthcareEntry = ({
@@ -18,6 +19,7 @@ const NewOccupationalHealthcareEntry = ({
   show,
   patientId,
   setEntryFormat,
+  setEntries,
 }: Props) => {
   const [error, setError] = useState<string>("");
   const [diagnosisCode, setDiagnosisCode] = useState<string>("");
@@ -78,10 +80,25 @@ const NewOccupationalHealthcareEntry = ({
             endDate: endDate.input.value,
           },
         } as unknown as EntryWithoutId;
-        await patientService.updateEntry(patientId, newEntryWithSickLeave);
+        const returnedPatient = await patientService.updateEntry(
+          patientId,
+          newEntryWithSickLeave
+        );
+        setEntries(returnedPatient.entries);
+        startDate.removeValue();
+        endDate.removeValue();
       } else {
-        await patientService.updateEntry(patientId, newEntry);
+        const returnedPatient = await patientService.updateEntry(
+          patientId,
+          newEntry
+        );
+        setEntries(returnedPatient.entries);
       }
+      description.removeValue();
+      date.removeValue();
+      specialist.removeValue();
+      setDiagnosisCodes([]);
+      employerName.removeValue();
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -92,8 +109,8 @@ const NewOccupationalHealthcareEntry = ({
           console.error(message);
           setError(message);
         } else {
-          console.error(e);
-          setError("Unrecognized axios error");
+          const error = e.response?.data.error;
+          setError(error);
         }
       } else {
         console.error("Unknown error", e);
