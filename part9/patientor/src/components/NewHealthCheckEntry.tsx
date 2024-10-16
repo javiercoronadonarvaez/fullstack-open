@@ -70,7 +70,8 @@ const NewHealthCheckEntry = ({
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.SyntheticEvent) => {
+    event.preventDefault();
     try {
       const newEntry = {
         description: description.input.value,
