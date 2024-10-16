@@ -69,12 +69,13 @@ const parseHealthCheckRating = (
 };
 
 const parseDiagnosisCodes = (object: unknown): Array<Diagnosis["code"]> => {
-  if (!object || typeof object !== "object" || !("diagnosisCodes" in object)) {
+  if (!object || typeof object !== "object") {
     // we will just trust the data to be in correct form
+    console.log(typeof object);
     return [] as Array<Diagnosis["code"]>;
   }
-
-  return object.diagnosisCodes as Array<Diagnosis["code"]>;
+  console.log("FOUND");
+  return object as Array<Diagnosis["code"]>;
 };
 
 export const toNewEntry = (object: unknown): EntryWithoutId => {
@@ -127,28 +128,32 @@ export const toNewEntry = (object: unknown): EntryWithoutId => {
         throw new Error("Missing or invalid discharge for Hospital entry");
 
       case "OccupationalHealthcare":
-        if ("employerName" in object && object.employerName === "object") {
-          return {
+        if ("employerName" in object) {
+          console.log("OBJECT", object);
+          const entry = {
             ...baseEntry,
             type: "OccupationalHealthcare", // Narrow type explicitly here
             employerName: parseDescription(object.employerName),
-          };
+          } as EntryWithoutId;
 
-          //return entry;
+          if ("sickLeave" in object) {
+            console.log(object.sickLeave);
+            const sickLeave = object.sickLeave as {
+              startDate: unknown;
+              endDate: unknown;
+            };
+            return {
+              ...baseEntry,
+              type: "OccupationalHealthcare", // Narrow type explicitly here
+              employerName: parseDescription(object.employerName),
+              sickLeave: {
+                startDate: parseDate(sickLeave.startDate),
+                endDate: parseDate(sickLeave.endDate),
+              },
+            };
+          }
 
-          // Optional field for sickLeave
-          // if ("sickLeave" in object && typeof object.sickLeave === "object") {
-          //   const sickLeave = object.sickLeave as {
-          //     startDate: unknown;
-          //     endDate: unknown;
-          //   };
-          //   entry.sickLeave = {
-          //     startDate: parseDate(sickLeave.startDate),
-          //     endDate: parseDate(sickLeave.endDate),
-          //   };
-          // }
-
-          // return entry;
+          return entry;
         }
         throw new Error(
           "Missing employerName for OccupationalHealthcare entry"
