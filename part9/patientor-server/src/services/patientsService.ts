@@ -8,7 +8,6 @@ import {
 } from "../types";
 
 const getSelectedPatientAttributes = (): NonSensitivePatient[] => {
-  console.log(patients);
   return patients.map(({ id, name, occupation, gender, dateOfBirth }) => ({
     id,
     name,
@@ -27,7 +26,6 @@ const getSelectedPatientAttributes = (): NonSensitivePatient[] => {
 // };
 
 const getAllPatients = (): Patient[] => {
-  console.log(patients);
   return patients;
 };
 
@@ -51,7 +49,6 @@ const addPatient = (entry: NewPatientEntry): Patient => {
 };
 
 const addEntry = (entry: EntryWithoutId, id: string): Patient | undefined => {
-  //console.log("NEWEST ENTRY", entry);
   if (!entry) {
     console.log("NO GOOD ENTRY", entry);
     return entry;
