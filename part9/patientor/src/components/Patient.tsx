@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Patient, Diagnosis } from "../types";
 import { entryDetailsFetcher } from "../utils/utils";
 import NewHealthCheckEntry from "./NewHealthCheckEntry";
+import NewHospitalEntry from "./NewHospitalEntry";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 
@@ -37,6 +38,12 @@ const PatientInfo = ({ patient, diagnosis }: IndividualPatient) => {
         New Occupational Healthcare Entry
       </button>
       <NewHealthCheckEntry
+        diagnosis={diagnosis}
+        show={entryFormat}
+        patientId={patient.id}
+        setEntryFormat={setEntryFormat}
+      />
+      <NewHospitalEntry
         diagnosis={diagnosis}
         show={entryFormat}
         patientId={patient.id}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useField } from "../hooks/hook";
-import { Diagnosis, EntryWithoutId, HealthCheckRating } from "../types";
+import { Diagnosis, EntryWithoutId } from "../types";
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import Error from "./Error";
 import axios from "axios";
@@ -13,7 +13,7 @@ export interface Props {
   setEntryFormat: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const NewHealthCheckEntry = ({
+const NewHospitalEntry = ({
   diagnosis,
   show,
   patientId,
@@ -22,27 +22,18 @@ const NewHealthCheckEntry = ({
   const [error, setError] = useState<string>("");
   const [diagnosisCode, setDiagnosisCode] = useState<string>("");
   const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis["code"][]>([]);
-  const [healthchekRating, setHealthchekRating] = useState<
-    number | "" | undefined
-  >("");
 
   const description = useField("text");
   const date = useField("date");
   const specialist = useField("text");
 
+  const dischargeDate = useField("date");
+  const criteria = useField("text");
+
   const diagnosisCodeOptions = diagnosis.map((diag) => ({
     value: diag.code,
     label: diag.code,
   }));
-
-  const healthCheckRatingOptions = Object.values(HealthCheckRating)
-    .filter((_, index) => index > 3) // Filter elements with index greater than 3
-    .map((v) => ({
-      value: v,
-      label: v.toString(),
-    }));
-
-  console.log("HEALTH", healthCheckRatingOptions);
 
   const onClick = (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -61,24 +52,18 @@ const NewHealthCheckEntry = ({
     }
   };
 
-  const onHealthCheckRatingChange = (event: SelectChangeEvent<number>) => {
-    event.preventDefault();
-    if (typeof event.target.value === "number") {
-      const value = event.target.value;
-      console.log("SELECTED VALUE", value);
-      setHealthchekRating(value);
-    }
-  };
-
   const handleSubmit = async () => {
     try {
       const newEntry = {
         description: description.input.value,
         date: date.input.value,
         specialist: specialist.input.value,
-        type: "HealthCheck",
-        healthCheckRating: healthchekRating,
+        type: "Hospital",
         diagnosisCodes: diagnosisCodes,
+        discharge: {
+          date: dischargeDate.input.value,
+          criteria: criteria.input.value,
+        },
       } as unknown as EntryWithoutId;
       await patientService.updateEntry(patientId, newEntry);
     } catch (e: unknown) {
@@ -109,14 +94,14 @@ const NewHealthCheckEntry = ({
   };
 
   const display =
-    show === "New Health Check Entry"
+    show === "New Hospital Entry"
       ? { ...mainStyle, display: "" }
       : { ...mainStyle, display: "none" };
 
   return (
     <div style={display}>
       <p>
-        <strong>New HealtchCheck Entry</strong>
+        <strong>New Hospital Entry</strong>
       </p>
       <form onSubmit={handleSubmit}>
         <Error error={error} setError={setError} />
@@ -128,6 +113,12 @@ const NewHealthCheckEntry = ({
         </p>
         <p>
           Specialist <input {...specialist.input} />
+        </p>
+        <p>
+          Criteria <input {...criteria.input} />
+        </p>
+        <p>
+          Discharge Date <input {...dischargeDate.input} />
         </p>
         Diagnosis Codes{" "}
         <Select
@@ -149,23 +140,6 @@ const NewHealthCheckEntry = ({
             index > 0 ? `, ${diagnosisCode}` : diagnosisCode
           )}
         </p>
-        Health Check Rating{" "}
-        <Select
-          label="Health Check Rating"
-          fullWidth
-          value={healthchekRating}
-          onChange={onHealthCheckRatingChange}
-        >
-          {healthCheckRatingOptions.map((healthCheckRating) => (
-            <MenuItem
-              key={healthCheckRating.label}
-              value={healthCheckRating.value}
-            >
-              {healthCheckRating.value}
-            </MenuItem>
-          ))}
-        </Select>
-        <p>Selected Rating: {healthchekRating}</p>
         <button type="submit">ADD ENTRY</button>
       </form>
       <button onClick={() => setEntryFormat("")}>CANCEL</button>
@@ -173,4 +147,4 @@ const NewHealthCheckEntry = ({
   );
 };
 
-export default NewHealthCheckEntry;
+export default NewHospitalEntry;
