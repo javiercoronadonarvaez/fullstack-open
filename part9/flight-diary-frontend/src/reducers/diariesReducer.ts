@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DiaryEntry, NewDiaryEntry } from "../types";
 import { getAllDiaries, addNewDiary } from "../services/diariesService";
 import { AppDispatch } from "./store";
+import axios from "axios";
 import { setError } from "./errorReducer";
 
 const initialState: DiaryEntry[] = [];
@@ -32,12 +33,22 @@ export const initializeDiaries = () => {
 
 export const addNewDiaryEntry = (newDiary: NewDiaryEntry) => {
   return async (dispatch: AppDispatch) => {
-    const newlyCreatedDiary = await addNewDiary(newDiary);
-    if (typeof newlyCreatedDiary === "string") {
-      dispatch(setError(newlyCreatedDiary)); // Assuming setError expects a string
-      console.error("Failed to create diary entry:", newlyCreatedDiary);
-    } else {
+    try {
+      const newlyCreatedDiary = await addNewDiary(newDiary);
       dispatch(updateDiariesWithNewEntry(newlyCreatedDiary));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log("AXIOS ERROR");
+        console.error(error.response);
+        const errorMessages = error.response?.data.error.map(
+          (error: { message: never }) => error.message
+        );
+        const errorString = errorMessages.join("\n");
+        console.log(errorString);
+        dispatch(setError(errorString));
+      } else {
+        return "ERROR";
+      }
     }
   };
 };
