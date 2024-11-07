@@ -29,9 +29,9 @@ const Blog = ({ blog }) => {
 
   const showAll = { display: display ? "" : "none" };
   const showLimited = { display: display ? "none" : "" };
-  const showDeleteButton = {
-    display: blog.user.id === user.id ? "" : "none",
-  };
+  // const showDeleteButton = {
+  //   display: blog.user.id === user.id ? "" : "none",
+  // };
 
   return (
     <div className="Blog">
@@ -52,9 +52,8 @@ const Blog = ({ blog }) => {
           <button onClick={handleLikeIncrement}>like</button>
         </p>
         <p>{blog.author}</p>
-        <button style={showDeleteButton} onClick={handleDelete}>
-          delete
-        </button>
+        {/* <button style={showDeleteButton} onClick={handleDelete}> */}
+        <button onClick={handleDelete}>delete</button>
       </div>
     </div>
   );
