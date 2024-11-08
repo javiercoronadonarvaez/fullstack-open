@@ -28,7 +28,7 @@ const App = () => {
   return (
     <div>
       <Error />
-      {/* {user === null ? (
+      {user === null ? (
         <LoginForm />
       ) : (
         <div>
@@ -37,10 +37,7 @@ const App = () => {
           <BlogForm />
           <BlogList />
         </div>
-      )} */}
-      <Notification />
-      <BlogForm />
-      <BlogList />
+      )}
     </div>
   );
 };
