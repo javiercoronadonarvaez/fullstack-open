@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useField } from "../hooks";
 import { addNewBlog } from "../reducers/blogReducer";
 import { newBlogNotification } from "../reducers/notificationReducer";
+import { useState } from "react";
 import Togglable from "../components/Togglable";
 
 const BlogForm = () => {
@@ -9,6 +10,7 @@ const BlogForm = () => {
   const title = useField("text");
   const author = useField("text");
   const url = useField("text");
+  const [year, setYear] = useState("");
 
   const createBlog = (event) => {
     event.preventDefault();
@@ -16,12 +18,14 @@ const BlogForm = () => {
       title: title.input.value,
       author: author.input.value,
       url: url.input.value,
+      year: year,
     };
     dispatch(addNewBlog(newBlog));
     dispatch(newBlogNotification(newBlog));
     title.reset();
     author.reset();
     url.reset();
+    setYear("");
   };
 
   return (
@@ -39,6 +43,13 @@ const BlogForm = () => {
         <div>
           Url:
           <input {...url.input} />
+        </div>
+        <div>
+          Year:
+          <input
+            value={year}
+            onChange={(event) => setYear(event.target.value)}
+          />
         </div>
         <button type="submit">create</button>
       </form>
